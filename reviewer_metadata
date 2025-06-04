@@ -82,6 +82,16 @@ WITH reviewer_metadata AS (
     STRUCT('Samantha Sales', 'NOS', 'Tier 1', 'No'),
     STRUCT('Angel Fernandez', 'NOS', 'Tier 1', 'No'),
     STRUCT('Jessierey Pascual', 'NOS', 'Tier 1', 'No'),
-    STRUCT('Froilan Isidro', 'NOS', 'Tier 1', 'No')
+    STRUCT('Froilan Isidro', 'NOS', 'Tier 1', 'No'),
+
+   -- ESCY Squad
+    STRUCT('Pamela Gunawan', 'ESCY', 'Internal', 'No'),
+    STRUCT('Said Montufar Maldonado', 'ESCY', 'Internal', 'No'),
+    STRUCT('Sabrina Cui', 'ESCY', 'Internal', 'No'),
+    STRUCT('Max Arvidsson', 'ESCY', 'Internal', 'No'),
+    STRUCT('Blake Galley', 'ESCY', 'Internal', 'No'),
+    STRUCT('Kivon Mayers', 'ESCY', 'Internal', 'No'),
+    STRUCT('Dominic Stelmach', 'ESCY', 'Internal', 'No')
+
   ])
 )

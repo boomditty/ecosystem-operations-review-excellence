@@ -10,10 +10,12 @@ WITH reviewer_metadata AS (
     STRUCT('Justine Nieva', 'JFG', 'Tier 1', 'No'),
     STRUCT('Kevin Alejo', 'JFG', 'Tier 2', 'No'),
     STRUCT('Kimberly Claire De Lena', 'JFG', 'Tier 2 - Audit', 'Yes'),
+    STRUCT('Mark Sibal', 'JFG', 'Tier 1', 'No'),
     STRUCT('Mary Esguerra', 'JFG', 'Tier 2', 'No'),
     STRUCT('Philip Pena', 'JFG', 'Tier 1', 'No'),
     STRUCT('Ramil Dimacuha', 'JFG', 'Tier 1', 'No'),
     STRUCT('Roselyn Santos', 'JFG', 'Tier 1', 'No'),
+    STRUCT('Rommel Licup Jr', 'JFG', 'Tier 1', 'No'),
     STRUCT('Trace Pangan', 'JFG', 'Tier 2', 'No'),
     STRUCT('Von Mallari', 'JFG', 'Tier 2 - Audit', 'Yes'),
 
@@ -48,6 +50,7 @@ WITH reviewer_metadata AS (
     STRUCT('Nexus Baluran', 'MAN', 'Tier 1', 'No'),
     STRUCT('Rheyaleen Soriano', 'MAN', 'Tier 1', 'No'),
     STRUCT('Sheila Agaban', 'MAN', 'Tier 2', 'No'),
+    STRUCT('Veronica Musni', 'MAN', 'Tier 1', 'No'),
 
     -- RUE Squad
     STRUCT('Alvin Alipio', 'RUE', 'Tier 2 - Audit', 'Yes'),

@@ -1,0 +1,13 @@
+SELECT
+  s1.*,
+  s2.name AS app_type_name,
+  s2.description AS app_type_description,
+  s2.handle AS app_type_handle
+FROM
+  `sdp-prd-interim-data-loaders.app_store.app_submission_app_types` s1
+LEFT JOIN
+  `sdp-prd-interim-data-loaders.app_store.app_types` s2
+ON
+  s1.app_type_id = s2.id
+ORDER BY
+  updated_at DESC;

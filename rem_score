@@ -1,0 +1,58 @@
+DECLARE start_date TIMESTAMP DEFAULT TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 30 DAY);
+DECLARE end_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP();
+
+WITH reviewer_metadata AS (
+  SELECT * FROM UNNEST([
+    STRUCT('Adriane Guzman' AS reviewed_by, 'JFG' AS squad_code, 'Tier 1' AS review_tier, 'No' AS tier_2_audit),
+    STRUCT('Camille Reyes', 'JFG', 'Tier 1', 'No')
+    -- Add remaining reviewers here
+  ])
+),
+
+extracted_submission_reviews AS (
+  SELECT 
+    *,
+    CAST(REGEXP_EXTRACT(internal_notes, r"tickets/(\\d+)") AS INT64) AS extracted_ticket_id
+  FROM 
+    `sdp-prd-interim-data-loaders.app_store.submission_reviews`
+),
+
+reviews_with_metrics AS (
+  SELECT
+    s.reviewed_by,
+    COUNTIF(s.submission_review_status = 'approved') AS apps_published,
+    COUNT(s.screening_updated_at) AS updates_made,
+    COUNTIF(s.submission_review_status = 'rejected') AS rejection_count,
+    AVG(TIMESTAMP_DIFF(s.screening_completed_at, s.queued_at, HOUR)) AS avg_review_duration_hrs
+  FROM
+    `sdp-prd-build-ecosystem.intermediate.submission_screenings` s
+  LEFT JOIN extracted_submission_reviews esr
+    ON s.app_submission_id = esr.app_submission_id
+  WHERE
+    s.screening_completed_at BETWEEN start_date AND end_date
+  GROUP BY
+    s.reviewed_by
+),
+
+final_efficiency_metric AS (
+  SELECT
+    rwm.reviewed_by,
+    rm.squad_code,
+    rm.review_tier,
+    rm.tier_2_audit,
+    rwm.apps_published,
+    rwm.updates_made,
+    rwm.rejection_count,
+    rwm.avg_review_duration_hrs,
+    SAFE_DIVIDE(
+      (1.0 * rwm.apps_published + 0.25 * rwm.updates_made),
+      (0.5 * rwm.avg_review_duration_hrs + 0.5 * rwm.rejection_count)
+    ) AS reviewer_efficiency_metric
+  FROM
+    reviews_with_metrics rwm
+  LEFT JOIN reviewer_metadata rm ON rwm.reviewed_by = rm.reviewed_by
+)
+
+SELECT * 
+FROM final_efficiency_metric
+ORDER BY reviewer_efficiency_metric DESC;

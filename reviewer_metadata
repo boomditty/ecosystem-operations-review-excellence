@@ -1,25 +1,47 @@
 WITH reviewer_metadata AS (
   SELECT * FROM UNNEST([
-    -- JFG Squad
-    STRUCT('Adriane Guzman' AS reviewed_by, 'JFG' AS squad_code, 'Tier 1' AS review_tier, 'No' AS tier_2_audit),
-    STRUCT('Camille Reyes', 'JFG', 'Tier 1', 'No'),
+    -- JFG Squad (from latest T1/T2 list)
+    STRUCT('Adriane Guzman' AS reviewed_by, 'JFG' AS squad_code, 'Tier 2' AS review_tier, 'No' AS tier_2_audit),
     STRUCT('Dionard Badion', 'JFG', 'Tier 1', 'No'),
     STRUCT('Earl Quiambao', 'JFG', 'Tier 1', 'No'),
-    STRUCT('Ernel Ramos', 'JFG', 'Tier 2', 'No'),
     STRUCT('Jeremiah M', 'JFG', 'Tier 1', 'No'),
     STRUCT('Justine Nieva', 'JFG', 'Tier 1', 'No'),
     STRUCT('Kevin Alejo', 'JFG', 'Tier 2', 'No'),
-    STRUCT('Kimberly Claire De Lena', 'JFG', 'Tier 2 - Audit', 'Yes'),
-    STRUCT('Mark Sibal', 'JFG', 'Tier 1', 'No'),
+    STRUCT('Mark Sibal', 'JFG', 'Tier 2', 'No'),
     STRUCT('Mary Esguerra', 'JFG', 'Tier 2', 'No'),
-    STRUCT('Philip Pena', 'JFG', 'Tier 1', 'No'),
     STRUCT('Ramil Dimacuha', 'JFG', 'Tier 1', 'No'),
+    STRUCT('Rommel Licup Jr', 'JFG', 'Tier 2', 'No'),
     STRUCT('Roselyn Santos', 'JFG', 'Tier 1', 'No'),
-    STRUCT('Rommel Licup Jr', 'JFG', 'Tier 1', 'No'),
-    STRUCT('Trace Pangan', 'JFG', 'Tier 2', 'No'),
-    STRUCT('Von Mallari', 'JFG', 'Tier 2 - Audit', 'Yes'),
 
-    -- KRM Squad
+    -- MAN Squad (from latest T1/T2 list)
+    STRUCT('Angela De Jesus', 'MAN', 'Tier 1', 'No'),
+    STRUCT('Dominic Mostar', 'MAN', 'Tier 1', 'No'),
+    STRUCT('Haidee Soto', 'MAN', 'Tier 2', 'No'),
+    STRUCT('Jasper Agbanglo', 'MAN', 'Tier 1', 'No'),
+    STRUCT('Jeffrey Rozul', 'MAN', 'Tier 1', 'No'),
+    STRUCT('Jefferson Anonas', 'MAN', 'Tier 2', 'No'),
+    STRUCT('Johanna Guzman', 'MAN', 'Tier 1', 'No'),
+    STRUCT('Joseph Jimenez', 'MAN', 'Tier 2', 'No'),
+    STRUCT('Rheyaleen Soriano', 'MAN', 'Tier 1', 'No'),
+    STRUCT('Sheila Agaban', 'MAN', 'Tier 2', 'No'),
+    STRUCT('Veronica Musni', 'MAN', 'Tier 2', 'No'),
+
+    -- NOS Squad (from latest T1/T2 list)
+    STRUCT('Angel Fernandez', 'NOS', 'Tier 2', 'No'),
+    STRUCT('Bernard Alfonso', 'NOS', 'Tier 2', 'No'),
+    STRUCT('Blue Bautista', 'NOS', 'Tier 2', 'No'),
+    STRUCT('Camille Quizon', 'NOS', 'Tier 2', 'No'),
+    STRUCT('Caryl Rivera', 'NOS', 'Tier 2', 'No'),
+    STRUCT('Charl Tagalog', 'NOS', 'Tier 2', 'No'),
+    STRUCT('Dave Jor', 'NOS', 'Tier 2', 'No'),
+    STRUCT('Jessierey Pascual', 'NOS', 'Tier 2', 'No'),
+    STRUCT('Lawrence Lo', 'NOS', 'Tier 2', 'No'),
+    STRUCT('Nazareno Llenares', 'NOS', 'Tier 2', 'No'),
+    STRUCT('Prince Tajonera', 'NOS', 'Tier 2', 'No'),
+    STRUCT('Romel Obellano', 'NOS', 'Tier 2', 'No'),
+    STRUCT('Samantha Sales', 'NOS', 'Tier 2', 'No'),
+
+    -- KRM Squad (all are Tier 2 - Audit)
     STRUCT('Andrew Exiomo', 'KRM', 'Tier 2 - Audit', 'Yes'),
     STRUCT('Bea Flores', 'KRM', 'Tier 2 - Audit', 'Yes'),
     STRUCT('Christine Jhane Tolentino', 'KRM', 'Tier 2 - Audit', 'Yes'),
@@ -34,25 +56,7 @@ WITH reviewer_metadata AS (
     STRUCT('Mimelanie Cunanan', 'KRM', 'Tier 2 - Audit', 'Yes'),
     STRUCT('Shaira Salgado', 'KRM', 'Tier 2 - Audit', 'Yes'),
 
-    -- MAN Squad
-    STRUCT('Angela De Jesus', 'MAN', 'Tier 1', 'No'),
-    STRUCT('Bea Endozo', 'MAN', 'Tier 1', 'No'),
-    STRUCT('Camille Cordova Carlos', 'MAN', 'Tier 2', 'No'),
-    STRUCT('Dominic Mostar', 'MAN', 'Tier 1', 'No'),
-    STRUCT('Haidee Soto', 'MAN', 'Tier 2', 'No'),
-    STRUCT('Jasper Agbanglo', 'MAN', 'Tier 1', 'No'),
-    STRUCT('Jeffrey Rozul', 'MAN', 'Tier 1', 'No'),
-    STRUCT('Jefferson Anonas', 'MAN', 'Tier 1', 'No'),
-    STRUCT('Johanna Guzman', 'MAN', 'Tier 1', 'No'),
-    STRUCT('Joseph Jimenez', 'MAN', 'Tier 2', 'No'),
-    STRUCT('Marina Bacatan', 'MAN', 'Tier 2', 'No'),
-    STRUCT('Marinelle Higante', 'MAN', 'Tier 2 - Audit', 'Yes'),
-    STRUCT('Nexus Baluran', 'MAN', 'Tier 1', 'No'),
-    STRUCT('Rheyaleen Soriano', 'MAN', 'Tier 1', 'No'),
-    STRUCT('Sheila Agaban', 'MAN', 'Tier 2', 'No'),
-    STRUCT('Veronica Musni', 'MAN', 'Tier 1', 'No'),
-
-    -- RUE Squad
+    -- RUE Squad (all are Tier 2 - Audit)
     STRUCT('Alvin Alipio', 'RUE', 'Tier 2 - Audit', 'Yes'),
     STRUCT('Cyrille Lacson Due', 'RUE', 'Tier 2 - Audit', 'Yes'),
     STRUCT('Diana Limiac', 'RUE', 'Tier 2', 'No'),
@@ -67,24 +71,7 @@ WITH reviewer_metadata AS (
     STRUCT('Rosell Feliciano', 'RUE', 'Tier 2 - Audit', 'Yes'),
     STRUCT('Yhana Valdez', 'RUE', 'Tier 2 - Audit', 'Yes'),
 
-    -- NOS Squad (New)
-    STRUCT('Ivan Cleone Bolus', 'NOS', 'Tier 1', 'No'),
-    STRUCT('Nazareno llenares', 'NOS', 'Tier 1', 'No'),
-    STRUCT('Dave Jor', 'NOS', 'Tier 1', 'No'),
-    STRUCT('Charl Tagalog', 'NOS', 'Tier 1', 'No'),
-    STRUCT('Blue Bautista', 'NOS', 'Tier 1', 'No'),
-    STRUCT('Camille Quizon', 'NOS', 'Tier 1', 'No'),
-    STRUCT('Prince Tajonera', 'NOS', 'Tier 1', 'No'),
-    STRUCT('Lawrence Lo', 'NOS', 'Tier 1', 'No'),
-    STRUCT('Caryl Rivera', 'NOS', 'Tier 1', 'No'),
-    STRUCT('Romel Obellano', 'NOS', 'Tier 1', 'No'),
-    STRUCT('Bernard Alfonso', 'NOS', 'Tier 1', 'No'),
-    STRUCT('Samantha Sales', 'NOS', 'Tier 1', 'No'),
-    STRUCT('Angel Fernandez', 'NOS', 'Tier 1', 'No'),
-    STRUCT('Jessierey Pascual', 'NOS', 'Tier 1', 'No'),
-    STRUCT('Froilan Isidro', 'NOS', 'Tier 1', 'No'),
-
-   -- ESCY Squad
+    -- ESCY Squad (all are Internal)
     STRUCT('Pamela Gunawan', 'ESCY', 'Internal', 'No'),
     STRUCT('Said Montufar Maldonado', 'ESCY', 'Internal', 'No'),
     STRUCT('Sabrina Cui', 'ESCY', 'Internal', 'No'),
@@ -92,6 +79,5 @@ WITH reviewer_metadata AS (
     STRUCT('Blake Galley', 'ESCY', 'Internal', 'No'),
     STRUCT('Kivon Mayers', 'ESCY', 'Internal', 'No'),
     STRUCT('Dominic Stelmach', 'ESCY', 'Internal', 'No')
-
   ])
 )

@@ -59,8 +59,6 @@ WITH reviewer_metadata AS (
     -- RUE Squad (all are Tier 2 - Audit)
     STRUCT('Alvin Alipio', 'RUE', 'Tier 2 - Audit', 'Yes'),
     STRUCT('Cyrille Lacson Due', 'RUE', 'Tier 2 - Audit', 'Yes'),
-    STRUCT('Diana Limiac', 'RUE', 'Tier 2', 'No'),
-    STRUCT('Jainah David', 'RUE', 'Tier 2', 'No'),
     STRUCT('Jid Dayrit', 'RUE', 'Tier 2 - Audit', 'Yes'),
     STRUCT('Juan Manio', 'RUE', 'Tier 2 - Audit', 'Yes'),
     STRUCT('Lev Maghinang', 'RUE', 'Tier 2 - Audit', 'Yes'),

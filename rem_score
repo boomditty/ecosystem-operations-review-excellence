@@ -1,58 +1,319 @@
-DECLARE start_date TIMESTAMP DEFAULT TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 30 DAY);
-DECLARE end_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP();
+1️⃣ Reviewer-Level Query
 
 WITH reviewer_metadata AS (
-  SELECT * FROM UNNEST([
-    STRUCT('Adriane Guzman' AS reviewed_by, 'JFG' AS squad_code, 'Tier 1' AS review_tier, 'No' AS tier_2_audit),
-    STRUCT('Camille Reyes', 'JFG', 'Tier 1', 'No')
-    -- Add remaining reviewers here
-  ])
+ SELECT * FROM UNNEST([
+   -- JFG Squad
+   STRUCT('Adriane Guzman' AS reviewed_by, 'JFG' AS squad_code, 'Tier 1' AS review_tier, 'No' AS tier_2_audit),
+   STRUCT('Camille Reyes', 'JFG', 'Tier 1', 'No'),
+   STRUCT('Dionard Badion', 'JFG', 'Tier 1', 'No'),
+   STRUCT('Earl Quiambao', 'JFG', 'Tier 1', 'No'),
+   STRUCT('Ernel Ramos', 'JFG', 'Tier 2', 'No'),
+   STRUCT('Jeremiah M', 'JFG', 'Tier 1', 'No'),
+   STRUCT('Justine Nieva', 'JFG', 'Tier 1', 'No'),
+   STRUCT('Kevin Alejo', 'JFG', 'Tier 2', 'No'),
+   STRUCT('Kimberly Claire De Lena', 'JFG', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Mark Sibal', 'JFG', 'Tier 1', 'No'),
+   STRUCT('Mary Esguerra', 'JFG', 'Tier 2', 'No'),
+   STRUCT('Philip Pena', 'JFG', 'Tier 1', 'No'),
+   STRUCT('Ramil Dimacuha', 'JFG', 'Tier 1', 'No'),
+   STRUCT('Roselyn Santos', 'JFG', 'Tier 1', 'No'),
+   STRUCT('Rommel Licup Jr', 'JFG', 'Tier 1', 'No'),
+   STRUCT('Trace Pangan', 'JFG', 'Tier 2', 'No'),
+   STRUCT('Von Mallari', 'JFG', 'Tier 2 - Audit', 'Yes'),
+
+
+   -- KRM Squad
+   STRUCT('Andrew Exiomo', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Bea Flores', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Christine Jhane Tolentino', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Dhang Losada', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Ian Sanchez', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Jenny-Lyn Lardizabal', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Jolina Romero', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Justine Ignacio', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Kimberly Alzona', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Marigold Ocampo', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Mark Gopez', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Mimelanie Cunanan', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Shaira Salgado', 'KRM', 'Tier 2 - Audit', 'Yes'),
+
+
+   -- MAN Squad
+   STRUCT('Angela De Jesus', 'MAN', 'Tier 1', 'No'),
+   STRUCT('Bea Endozo', 'MAN', 'Tier 1', 'No'),
+   STRUCT('Camille Cordova Carlos', 'MAN', 'Tier 2', 'No'),
+   STRUCT('Dominic Mostar', 'MAN', 'Tier 1', 'No'),
+   STRUCT('Haidee Soto', 'MAN', 'Tier 2', 'No'),
+   STRUCT('Jasper Agbanglo', 'MAN', 'Tier 1', 'No'),
+   STRUCT('Jeffrey Rozul', 'MAN', 'Tier 1', 'No'),
+   STRUCT('Jefferson Anonas', 'MAN', 'Tier 1', 'No'),
+   STRUCT('Johanna Guzman', 'MAN', 'Tier 1', 'No'),
+   STRUCT('Joseph Jimenez', 'MAN', 'Tier 2', 'No'),
+   STRUCT('Marina Bacatan', 'MAN', 'Tier 2', 'No'),
+   STRUCT('Marinelle Higante', 'MAN', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Nexus Baluran', 'MAN', 'Tier 1', 'No'),
+   STRUCT('Rheyaleen Soriano', 'MAN', 'Tier 1', 'No'),
+   STRUCT('Sheila Agaban', 'MAN', 'Tier 2', 'No'),
+   STRUCT('Veronica Musni', 'MAN', 'Tier 1', 'No'),
+
+
+   -- RUE Squad
+   STRUCT('Alvin Alipio', 'RUE', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Cyrille Lacson Due', 'RUE', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Diana Limiac', 'RUE', 'Tier 2', 'No'),
+   STRUCT('Jainah David', 'RUE', 'Tier 2', 'No'),
+   STRUCT('Jid Dayrit', 'RUE', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Juan Manio', 'RUE', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Lev Maghinang', 'RUE', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Louella Benedicto', 'RUE', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Maricar Manog', 'RUE', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Mary Grace Ronquillo', 'RUE', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Mary Joyce Cubacub', 'RUE', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Rosell Feliciano', 'RUE', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Yhana Valdez', 'RUE', 'Tier 2 - Audit', 'Yes'),
+
+
+   -- NOS Squad (New)
+   STRUCT('Ivan Cleone Bolus', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Nazareno llenares', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Dave Jor', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Charl Tagalog', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Blue Bautista', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Camille Quizon', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Prince Tajonera', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Lawrence Lo', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Caryl Rivera', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Romel Obellano', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Bernard Alfonso', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Samantha Sales', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Angel Fernandez', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Jessierey Pascual', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Froilan Isidro', 'NOS', 'Tier 1', 'No'),
+
+
+  -- ESCY Squad
+   STRUCT('Pamela Gunawan', 'ESCY', 'Internal', 'No'),
+   STRUCT('Said Montufar Maldonado', 'ESCY', 'Internal', 'No'),
+   STRUCT('Sabrina Cui', 'ESCY', 'Internal', 'No'),
+   STRUCT('Max Arvidsson', 'ESCY', 'Internal', 'No'),
+   STRUCT('Blake Galley', 'ESCY', 'Internal', 'No'),
+   STRUCT('Kivon Mayers', 'ESCY', 'Internal', 'No'),
+   STRUCT('Dominic Stelmach', 'ESCY', 'Internal', 'No')
+
+
+ ])
 ),
 
-extracted_submission_reviews AS (
-  SELECT 
-    *,
-    CAST(REGEXP_EXTRACT(internal_notes, r"tickets/(\\d+)") AS INT64) AS extracted_ticket_id
-  FROM 
-    `sdp-prd-interim-data-loaders.app_store.submission_reviews`
-),
 
-reviews_with_metrics AS (
-  SELECT
-    s.reviewed_by,
-    COUNTIF(s.submission_review_status = 'approved') AS apps_published,
-    COUNT(s.screening_updated_at) AS updates_made,
-    COUNTIF(s.submission_review_status = 'rejected') AS rejection_count,
-    AVG(TIMESTAMP_DIFF(s.screening_completed_at, s.queued_at, HOUR)) AS avg_review_duration_hrs
-  FROM
-    `sdp-prd-build-ecosystem.intermediate.submission_screenings` s
-  LEFT JOIN extracted_submission_reviews esr
-    ON s.app_submission_id = esr.app_submission_id
-  WHERE
-    s.screening_completed_at BETWEEN start_date AND end_date
-  GROUP BY
-    s.reviewed_by
-),
+reviewer_stats AS (
+ SELECT
+   s.reviewed_by,
+   rm.squad_code,
+   rm.review_tier,
+   rm.tier_2_audit,
+   DATE(s.screening_updated_at) AS screening_updated_date,  -- NEW: Adds daily granularity for Looker Studio
 
-final_efficiency_metric AS (
-  SELECT
-    rwm.reviewed_by,
-    rm.squad_code,
-    rm.review_tier,
-    rm.tier_2_audit,
-    rwm.apps_published,
-    rwm.updates_made,
-    rwm.rejection_count,
-    rwm.avg_review_duration_hrs,
-    SAFE_DIVIDE(
-      (1.0 * rwm.apps_published + 0.25 * rwm.updates_made),
-      (0.5 * rwm.avg_review_duration_hrs + 0.5 * rwm.rejection_count)
-    ) AS reviewer_efficiency_metric
-  FROM
-    reviews_with_metrics rwm
-  LEFT JOIN reviewer_metadata rm ON rwm.reviewed_by = rm.reviewed_by
+
+   COUNTIF(s.submission_review_status = 'approved') AS apps_published,
+   COUNTIF(s.submission_review_status = 'rejected') AS rejection_count,
+   COUNTIF(s.screening_completed_at IS NULL AND s.screening_updated_at IS NOT NULL) AS updates_made,
+   SUM(COALESCE(s.ticket_update_count, 0)) AS total_ticket_updates,
+   SUM(COALESCE(s.reqs_checked, 0)) AS total_requirements_checked,
+
+
+   AVG(
+     LEAST(
+       SAFE_CAST(TIMESTAMP_DIFF(s.screening_completed_at, s.queued_at, MINUTE) AS FLOAT64),
+       1440
+     )
+   ) AS avg_review_duration_mins
+
+
+ FROM
+   `sdp-prd-build-ecosystem.scratch.ss_snapshot` s
+ JOIN reviewer_metadata rm
+   ON s.reviewed_by = rm.reviewed_by
+ WHERE
+   rm.review_tier != 'Tier 2 - Audit'
+   AND rm.squad_code != 'ESCY'
+   AND s.screening_updated_at IS NOT NULL -- prevents NULL dates
+ GROUP BY
+   s.reviewed_by, rm.squad_code, rm.review_tier, rm.tier_2_audit, DATE(s.screening_updated_at)
+)
+SELECT
+ reviewed_by,
+ squad_code,
+ review_tier,
+ tier_2_audit,
+ screening_updated_date,
+ apps_published,
+ rejection_count,
+ updates_made,
+ total_ticket_updates,
+ total_requirements_checked,
+ avg_review_duration_mins,
+ (
+   (
+     apps_published * 1.0
+     + rejection_count * 0.5
+     + total_ticket_updates * 0.1
+     + total_requirements_checked * 0.01
+   )
+   /
+   NULLIF(avg_review_duration_mins, 0)
+ ) AS reviewer_efficiency_metric
+FROM
+ reviewer_stats
+ORDER BY
+ screening_updated_date DESC,
+ reviewer_efficiency_metric DESC;
+
+
+2️⃣ Drill-Down Query (per submission, with link)
+
+WITH reviewer_metadata AS (
+ SELECT * FROM UNNEST([
+   -- JFG Squad
+   STRUCT('Adriane Guzman' AS reviewed_by, 'JFG' AS squad_code, 'Tier 1' AS review_tier, 'No' AS tier_2_audit),
+   STRUCT('Camille Reyes', 'JFG', 'Tier 1', 'No'),
+   STRUCT('Dionard Badion', 'JFG', 'Tier 1', 'No'),
+   STRUCT('Earl Quiambao', 'JFG', 'Tier 1', 'No'),
+   STRUCT('Ernel Ramos', 'JFG', 'Tier 2', 'No'),
+   STRUCT('Jeremiah M', 'JFG', 'Tier 1', 'No'),
+   STRUCT('Justine Nieva', 'JFG', 'Tier 1', 'No'),
+   STRUCT('Kevin Alejo', 'JFG', 'Tier 2', 'No'),
+   STRUCT('Kimberly Claire De Lena', 'JFG', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Mark Sibal', 'JFG', 'Tier 1', 'No'),
+   STRUCT('Mary Esguerra', 'JFG', 'Tier 2', 'No'),
+   STRUCT('Philip Pena', 'JFG', 'Tier 1', 'No'),
+   STRUCT('Ramil Dimacuha', 'JFG', 'Tier 1', 'No'),
+   STRUCT('Roselyn Santos', 'JFG', 'Tier 1', 'No'),
+   STRUCT('Rommel Licup Jr', 'JFG', 'Tier 1', 'No'),
+   STRUCT('Trace Pangan', 'JFG', 'Tier 2', 'No'),
+   STRUCT('Von Mallari', 'JFG', 'Tier 2 - Audit', 'Yes'),
+
+
+   -- KRM Squad
+   STRUCT('Andrew Exiomo', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Bea Flores', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Christine Jhane Tolentino', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Dhang Losada', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Ian Sanchez', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Jenny-Lyn Lardizabal', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Jolina Romero', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Justine Ignacio', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Kimberly Alzona', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Marigold Ocampo', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Mark Gopez', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Mimelanie Cunanan', 'KRM', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Shaira Salgado', 'KRM', 'Tier 2 - Audit', 'Yes'),
+
+
+   -- MAN Squad
+   STRUCT('Angela De Jesus', 'MAN', 'Tier 1', 'No'),
+   STRUCT('Bea Endozo', 'MAN', 'Tier 1', 'No'),
+   STRUCT('Camille Cordova Carlos', 'MAN', 'Tier 2', 'No'),
+   STRUCT('Dominic Mostar', 'MAN', 'Tier 1', 'No'),
+   STRUCT('Haidee Soto', 'MAN', 'Tier 2', 'No'),
+   STRUCT('Jasper Agbanglo', 'MAN', 'Tier 1', 'No'),
+   STRUCT('Jeffrey Rozul', 'MAN', 'Tier 1', 'No'),
+   STRUCT('Jefferson Anonas', 'MAN', 'Tier 1', 'No'),
+   STRUCT('Johanna Guzman', 'MAN', 'Tier 1', 'No'),
+   STRUCT('Joseph Jimenez', 'MAN', 'Tier 2', 'No'),
+   STRUCT('Marina Bacatan', 'MAN', 'Tier 2', 'No'),
+   STRUCT('Marinelle Higante', 'MAN', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Nexus Baluran', 'MAN', 'Tier 1', 'No'),
+   STRUCT('Rheyaleen Soriano', 'MAN', 'Tier 1', 'No'),
+   STRUCT('Sheila Agaban', 'MAN', 'Tier 2', 'No'),
+   STRUCT('Veronica Musni', 'MAN', 'Tier 1', 'No'),
+
+
+   -- RUE Squad
+   STRUCT('Alvin Alipio', 'RUE', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Cyrille Lacson Due', 'RUE', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Diana Limiac', 'RUE', 'Tier 2', 'No'),
+   STRUCT('Jainah David', 'RUE', 'Tier 2', 'No'),
+   STRUCT('Jid Dayrit', 'RUE', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Juan Manio', 'RUE', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Lev Maghinang', 'RUE', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Louella Benedicto', 'RUE', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Maricar Manog', 'RUE', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Mary Grace Ronquillo', 'RUE', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Mary Joyce Cubacub', 'RUE', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Rosell Feliciano', 'RUE', 'Tier 2 - Audit', 'Yes'),
+   STRUCT('Yhana Valdez', 'RUE', 'Tier 2 - Audit', 'Yes'),
+
+
+   -- NOS Squad (New)
+   STRUCT('Ivan Cleone Bolus', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Nazareno llenares', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Dave Jor', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Charl Tagalog', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Blue Bautista', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Camille Quizon', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Prince Tajonera', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Lawrence Lo', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Caryl Rivera', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Romel Obellano', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Bernard Alfonso', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Samantha Sales', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Angel Fernandez', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Jessierey Pascual', 'NOS', 'Tier 1', 'No'),
+   STRUCT('Froilan Isidro', 'NOS', 'Tier 1', 'No'),
+
+
+  -- ESCY Squad
+   STRUCT('Pamela Gunawan', 'ESCY', 'Internal', 'No'),
+   STRUCT('Said Montufar Maldonado', 'ESCY', 'Internal', 'No'),
+   STRUCT('Sabrina Cui', 'ESCY', 'Internal', 'No'),
+   STRUCT('Max Arvidsson', 'ESCY', 'Internal', 'No'),
+   STRUCT('Blake Galley', 'ESCY', 'Internal', 'No'),
+   STRUCT('Kivon Mayers', 'ESCY', 'Internal', 'No'),
+   STRUCT('Dominic Stelmach', 'ESCY', 'Internal', 'No')
+
+
+ ])
 )
 
-SELECT * 
-FROM final_efficiency_metric
-ORDER BY reviewer_efficiency_metric DESC;
+
+SELECT
+ s.app_submission_id,
+  CONCAT('https://apps.shopify.com/internal/app_submissions/', s.app_submission_id, '/edit') AS app_submission_link,
+ s.reviewed_by,
+ rm.squad_code,
+ rm.review_tier,
+ rm.tier_2_audit,
+ s.submission_review_status,
+ DATE(s.screening_updated_at) AS screening_updated_date,  -- For Looker Studio date filtering
+ s.screening_updated_at,
+ s.screening_completed_at,
+ s.queued_at,
+ s.ticket_update_count,
+ s.reqs_checked,
+
+
+ -- Efficiency metric breakdown for transparency per review:
+ -- Each boolean is 1 if true, else 0
+ -- These can be summed in Looker Studio for reviewer-level contribution
+ CASE WHEN s.submission_review_status = 'approved' THEN 1 ELSE 0 END AS approved_contribution,
+ CASE WHEN s.submission_review_status = 'rejected' THEN 1 ELSE 0 END AS rejected_contribution,
+ COALESCE(s.ticket_update_count, 0) AS ticket_update_contribution,
+ COALESCE(s.reqs_checked, 0) AS reqs_checked_contribution,
+
+
+ -- Cap duration in minutes at 1440 (24h)
+ LEAST(
+   SAFE_CAST(TIMESTAMP_DIFF(s.screening_completed_at, s.queued_at, MINUTE) AS FLOAT64),
+   1440
+ ) AS review_duration_mins
+
+
+FROM
+ `sdp-prd-build-ecosystem.scratch.ss_snapshot` s
+JOIN
+ reviewer_metadata rm
+ ON s.reviewed_by = rm.reviewed_by
+WHERE
+ rm.review_tier != 'Tier 2 - Audit'
+ AND rm.squad_code != 'ESCY'
+ AND s.screening_updated_at IS NOT NULL

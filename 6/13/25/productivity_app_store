@@ -1,0 +1,325 @@
+WITH reviewer_metadata AS (
+SELECT * FROM UNNEST([
+  -- JFG Squad
+  STRUCT('Adriane Guzman' AS reviewed_by, 'JFG' AS squad_code, 'Tier 2' AS review_tier, 'No' AS tier_2_audit),
+  STRUCT('Dionard Badion', 'JFG', 'Tier 1', 'No'),
+  STRUCT('Earl Quiambao', 'JFG', 'Tier 1', 'No'),
+  STRUCT('Jeremiah M', 'JFG', 'Tier 1', 'No'),
+  STRUCT('Justine Nieva', 'JFG', 'Tier 1', 'No'),
+  STRUCT('Kevin Alejo', 'JFG', 'Tier 2', 'No'),
+  STRUCT('Mark Sibal', 'JFG', 'Tier 2', 'No'),
+  STRUCT('Mary Esguerra', 'JFG', 'Tier 2', 'No'),
+  STRUCT('Ramil Dimacuha', 'JFG', 'Tier 1', 'No'),
+  STRUCT('Rommel Licup Jr', 'JFG', 'Tier 2', 'No'),
+  STRUCT('Roselyn Santos', 'JFG', 'Tier 1', 'No'),
+
+
+
+
+  -- MAN Squad
+  STRUCT('Angela De Jesus', 'MAN', 'Tier 1', 'No'),
+  STRUCT('Dominic Mostar', 'MAN', 'Tier 1', 'No'),
+  STRUCT('Haidee Soto', 'MAN', 'Tier 2', 'No'),
+  STRUCT('Jasper Agbanglo', 'MAN', 'Tier 1', 'No'),
+  STRUCT('Jeffrey Rozul', 'MAN', 'Tier 1', 'No'),
+  STRUCT('Jefferson Anonas', 'MAN', 'Tier 2', 'No'),
+  STRUCT('Johanna Guzman', 'MAN', 'Tier 1', 'No'),
+  STRUCT('Joseph Jimenez', 'MAN', 'Tier 2', 'No'),
+  STRUCT('Rheyaleen Soriano', 'MAN', 'Tier 1', 'No'),
+  STRUCT('Sheila Agaban', 'MAN', 'Tier 2', 'No'),
+  STRUCT('Veronica Musni', 'MAN', 'Tier 2', 'No'),
+
+
+
+
+  -- NOS Squad
+  STRUCT('Angel Fernandez', 'NOS', 'Tier 2', 'No'),
+  STRUCT('Bernard Alfonso', 'NOS', 'Tier 2', 'No'),
+  STRUCT('Blue Bautista', 'NOS', 'Tier 2', 'No'),
+  STRUCT('Camille Quizon', 'NOS', 'Tier 2', 'No'),
+  STRUCT('Caryl Rivera', 'NOS', 'Tier 2', 'No'),
+  STRUCT('Charl Tagalog', 'NOS', 'Tier 2', 'No'),
+  STRUCT('Dave Jor', 'NOS', 'Tier 2', 'No'),
+  STRUCT('Jessierey Pascual', 'NOS', 'Tier 2', 'No'),
+  STRUCT('Lawrence Lo', 'NOS', 'Tier 2', 'No'),
+  STRUCT('Nazareno Llenares', 'NOS', 'Tier 2', 'No'),
+  STRUCT('Prince Tajonera', 'NOS', 'Tier 2', 'No'),
+  STRUCT('Romel Obellano', 'NOS', 'Tier 2', 'No'),
+  STRUCT('Samantha Sales', 'NOS', 'Tier 2', 'No'),
+
+
+
+
+  -- KRM Squad
+  STRUCT('Andrew Exiomo', 'KRM', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Bea Flores', 'KRM', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Christine Jhane Tolentino', 'KRM', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Dhang Losada', 'KRM', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Ian Sanchez', 'KRM', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Jenny-Lyn Lardizabal', 'KRM', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Jolina Romero', 'KRM', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Justine Ignacio', 'KRM', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Kimberly Alzona', 'KRM', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Marigold Ocampo', 'KRM', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Mark Gopez', 'KRM', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Mimelanie Cunanan', 'KRM', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Shaira Salgado', 'KRM', 'Tier 2 - Audit', 'Yes'),
+
+
+
+
+  -- RUE Squad
+  STRUCT('Alvin Alipio', 'RUE', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Cyrille Lacson Due', 'RUE', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Jid Dayrit', 'RUE', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Juan Manio', 'RUE', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Lev Maghinang', 'RUE', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Louella Benedicto', 'RUE', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Maricar Manog', 'RUE', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Mary Grace Ronquillo', 'RUE', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Mary Joyce Cubacub', 'RUE', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Rosell Feliciano', 'RUE', 'Tier 2 - Audit', 'Yes'),
+  STRUCT('Yhana Valdez', 'RUE', 'Tier 2 - Audit', 'Yes'),
+
+
+
+
+  -- ESCY Squad
+  STRUCT('Pamela Gunawan', 'ESCY', 'Internal', 'No'),
+  STRUCT('Said Montufar Maldonado', 'ESCY', 'Internal', 'No'),
+  STRUCT('Sabrina Cui', 'ESCY', 'Internal', 'No'),
+  STRUCT('Max Arvidsson', 'ESCY', 'Internal', 'No'),
+  STRUCT('Blake Galley', 'ESCY', 'Internal', 'No'),
+  STRUCT('Kivon Mayers', 'ESCY', 'Internal', 'No'),
+  STRUCT('Dominic Stelmach', 'ESCY', 'Internal', 'No')
+])
+),
+
+
+filtered_events AS (
+  SELECT *
+  FROM `shopify-dw.apps_and_developers.app_store_app_submission_events_v1`
+  WHERE
+    event_subcategory NOT IN (
+      'cambridge_scan_check', 'llm_listing_check', 'employee_review_page_load',
+      'developer_submission_requirement_panel_load', 'sentinel_session_tokens_check',
+      'deprecated_api_check', 'presubmission_configuration_requirements',
+      'presubmission_emergency_contact_requirement', 'app_presubmission_check_modal_open',
+      'automated_check_scan_request'
+    )
+    AND event_type NOT IN (
+      'developer_submission_events', 'automated_check'
+    )
+),
+
+first_and_approved_times AS (
+  SELECT
+    app_store_app_submission_id,
+    app_store_app_submission_review_id,
+    MIN(CASE WHEN event_result = 'SUBMITTED' THEN event_timestamp END) AS first_submitted_time,
+    MIN(CASE WHEN event_result = 'APPROVED' THEN event_timestamp END) AS first_approved_time
+  FROM filtered_events
+  GROUP BY app_store_app_submission_id, app_store_app_submission_review_id
+),
+
+first_reviewer_action AS (
+  SELECT
+    fe.app_store_app_submission_id,
+    fe.app_store_app_submission_review_id,
+    MIN(fe.event_timestamp) AS first_reviewer_action_time
+  FROM filtered_events fe
+  JOIN first_and_approved_times fat
+    ON fe.app_store_app_submission_id = fat.app_store_app_submission_id
+    AND fe.app_store_app_submission_review_id = fat.app_store_app_submission_review_id
+  WHERE
+    fe.event_result != 'SUBMITTED'
+    AND fe.event_timestamp > fat.first_submitted_time
+  GROUP BY fe.app_store_app_submission_id, fe.app_store_app_submission_review_id
+),
+
+reviewer_actions AS (
+  SELECT
+    app_store_app_submission_id,
+    app_store_app_submission_review_id,
+    reviewer_name,
+    event_timestamp,
+    event_result,
+    event_subcategory, 
+    session_token,
+    LAG(event_timestamp) OVER(
+      PARTITION BY app_store_app_submission_id, app_store_app_submission_review_id, reviewer_name
+      ORDER BY event_timestamp
+    ) AS prev_event_time
+  FROM filtered_events
+),
+
+unique_reviewer_count AS (
+  SELECT
+    ra.app_store_app_submission_id,
+    ra.app_store_app_submission_review_id,
+    COUNT(DISTINCT ra.reviewer_name) AS unique_reviewers
+  FROM reviewer_actions ra
+  INNER JOIN reviewer_metadata rm
+    ON ra.reviewer_name = rm.reviewed_by
+  GROUP BY ra.app_store_app_submission_id, ra.app_store_app_submission_review_id
+),
+
+reviewer_sessions AS (
+  SELECT
+    app_store_app_submission_id,
+    app_store_app_submission_review_id,
+    reviewer_name,
+    COUNT(DISTINCT session_token) AS session_count
+  FROM reviewer_actions
+  GROUP BY app_store_app_submission_id, app_store_app_submission_review_id, reviewer_name
+),
+
+latest_snapshot AS (
+  SELECT *
+  FROM (
+    SELECT
+      *,
+      ROW_NUMBER() OVER (
+        PARTITION BY app_submission_id, submission_review_id, reviewed_by
+        ORDER BY snapshot_time DESC
+      ) AS rn
+    FROM `sdp-prd-build-ecosystem.scratch.ss_snapshot`
+  )
+  WHERE rn = 1
+),
+
+system_submissions AS (
+  SELECT
+    app_store_app_submission_id,
+    app_store_app_submission_review_id,
+    COUNT(*) AS submission_count_system
+  FROM filtered_events
+  WHERE reviewer_name = 'System'
+    AND event_result = 'SUBMITTED'
+  GROUP BY app_store_app_submission_id, app_store_app_submission_review_id
+)
+
+SELECT
+  ra.app_store_app_submission_id,
+  ra.app_store_app_submission_review_id,
+  ra.reviewer_name,
+  rm.squad_code,
+  rm.review_tier,
+  rm.tier_2_audit,
+  ra.event_result,         
+  ra.event_subcategory, 
+
+  -- Productivity Metrics
+  SUM(
+    IF(
+      TIMESTAMP_DIFF(ra.event_timestamp, ra.prev_event_time, MINUTE) <= 15
+      AND ra.prev_event_time IS NOT NULL,
+      TIMESTAMP_DIFF(ra.event_timestamp, ra.prev_event_time, MINUTE),
+      0
+    )
+  ) AS total_active_minutes,
+
+  MAX(
+    IF(
+      ra.prev_event_time IS NOT NULL,
+      TIMESTAMP_DIFF(ra.event_timestamp, ra.prev_event_time, MINUTE),
+      0
+    )
+  ) AS longest_event_gap_minutes,
+
+  rs.session_count,
+
+  fat.first_submitted_time,
+  fat.first_approved_time,
+  fr.first_reviewer_action_time,
+
+  ROUND(TIMESTAMP_DIFF(fat.first_approved_time, fat.first_submitted_time, SECOND) / 60 / 60 / 24, 2) AS time_to_publish_days,
+
+  ROUND(TIMESTAMP_DIFF(fr.first_reviewer_action_time, fat.first_submitted_time, SECOND) / 60 / 60 / 24, 2) AS days_submitted_to_first_action,
+  ROUND(TIMESTAMP_DIFF(fr.first_reviewer_action_time, fat.first_submitted_time, SECOND) / 60 / 60, 2) AS hours_submitted_to_first_action,
+
+  ROUND(TIMESTAMP_DIFF(fat.first_approved_time, fr.first_reviewer_action_time, SECOND) / 60 / 60 / 24, 2) AS days_first_action_to_approved,
+  ROUND(TIMESTAMP_DIFF(fat.first_approved_time, fr.first_reviewer_action_time, SECOND) / 60 / 60, 2) AS hours_first_action_to_approved,
+
+  MAX(
+    CASE
+      WHEN ra.event_result = 'APPROVED'
+        THEN ROUND(TIMESTAMP_DIFF(ra.event_timestamp, fat.first_submitted_time, SECOND) / 60 / 60 / 24, 2)
+      ELSE NULL
+    END
+  ) AS time_to_publish_days_for_approver,
+
+  MAX(ra.event_timestamp) AS last_event_timestamp,
+
+  urc.unique_reviewers,
+
+  (TIMESTAMP_DIFF(CURRENT_TIMESTAMP(), fat.first_submitted_time, DAY) > 7 AND fr.first_reviewer_action_time IS NULL) AS stuck_in_queue_7_days,
+
+  -- SNAPSHOT FIELDS
+  ss.screening_number,
+  ss.queued_at,
+  ss.screening_began_at,
+  ss.screening_updated_at,
+  ss.screening_completed_at,
+  ss.submission_review_status,
+  ss.screening_outcome,
+  ss.reqs_checked,
+  ss.all_reqs_failed,
+
+CASE 
+    WHEN ra.reviewer_name = 'System' AND ra.event_result = 'SUBMITTED'
+    THEN sys_subs.submission_count_system
+    ELSE NULL
+  END AS submission_count
+
+FROM reviewer_actions ra
+LEFT JOIN reviewer_metadata rm
+  ON ra.reviewer_name = rm.reviewed_by
+JOIN first_and_approved_times fat
+  ON ra.app_store_app_submission_id = fat.app_store_app_submission_id
+  AND ra.app_store_app_submission_review_id = fat.app_store_app_submission_review_id
+JOIN first_reviewer_action fr
+  ON ra.app_store_app_submission_id = fr.app_store_app_submission_id
+  AND ra.app_store_app_submission_review_id = fr.app_store_app_submission_review_id
+LEFT JOIN unique_reviewer_count urc
+  ON ra.app_store_app_submission_id = urc.app_store_app_submission_id
+  AND ra.app_store_app_submission_review_id = urc.app_store_app_submission_review_id
+LEFT JOIN reviewer_sessions rs
+  ON ra.app_store_app_submission_id = rs.app_store_app_submission_id
+  AND ra.app_store_app_submission_review_id = rs.app_store_app_submission_review_id
+  AND ra.reviewer_name = rs.reviewer_name
+LEFT JOIN latest_snapshot ss
+  ON ra.app_store_app_submission_id = ss.app_submission_id
+  AND ra.app_store_app_submission_review_id = ss.submission_review_id
+  AND ra.reviewer_name = ss.reviewed_by
+LEFT JOIN system_submissions sys_subs
+  ON ra.app_store_app_submission_id = sys_subs.app_store_app_submission_id
+  AND ra.app_store_app_submission_review_id = sys_subs.app_store_app_submission_review_id
+
+GROUP BY
+  ra.app_store_app_submission_id,
+  ra.app_store_app_submission_review_id,
+  ra.reviewer_name,
+  rm.squad_code,
+  rm.review_tier,
+  rm.tier_2_audit,
+  ra.event_result,          
+  ra.event_subcategory,      
+  rs.session_count,
+  fat.first_submitted_time,
+  fat.first_approved_time,
+  fr.first_reviewer_action_time,
+  urc.unique_reviewers,
+  ss.screening_number,
+  ss.queued_at,
+  ss.screening_began_at,
+  ss.screening_updated_at,
+  ss.screening_completed_at,
+  ss.submission_review_status,
+  ss.screening_outcome,
+  ss.reqs_checked,
+  ss.all_reqs_failed,
+  sys_subs.submission_count_system
+
+ORDER BY last_event_timestamp DESC
+;

@@ -1,0 +1,140 @@
+WITH reviewer_metadata AS (
+  SELECT * FROM UNNEST([
+-- JFG Squad (from latest T1/T2 list)
+STRUCT('Adriane Guzman' AS reviewed_by, 'JFG' AS squad_code, 'Tier 2' AS review_tier, 'No' AS tier_2_audit, 'adriane.deguzman@shopify.com' AS email_address),
+STRUCT('Dionard Badion', 'JFG', 'Tier 1', 'No', 'dionard.badion@shopify.com'),
+STRUCT('Earl Quiambao', 'JFG', 'Tier 1', 'No', 'earl.quiambao@shopify.com'),
+STRUCT('Jeremiah M', 'JFG', 'Tier 1', 'No', null),
+STRUCT('Justine Nieva', 'JFG', 'Tier 1', 'No', 'justine.nieva@shopify.com'),
+STRUCT('Kevin Alejo', 'JFG', 'Tier 2', 'No', 'kevin.alejo@shopify.com'),
+STRUCT('Mark Sibal', 'JFG', 'Tier 2', 'No', 'mark.sibal@shopify.com'),
+STRUCT('Mary Esguerra', 'JFG', 'Tier 2', 'No', 'mary.esguerra@shopify.com'),
+STRUCT('Ramil Dimacuha', 'JFG', 'Tier 1', 'No', 'ramil.dimacuha@shopify.com'),
+STRUCT('Rommel Licup Jr', 'JFG', 'Tier 2', 'No', 'rommel.licup@shopify.com'),
+STRUCT('Roselyn Santos', 'JFG', 'Tier 1', 'No', 'roselyn.santos@shopify.com'),
+
+-- MAN Squad (from latest T1/T2 list)
+STRUCT('Angela De Jesus', 'MAN', 'Tier 1', 'No', 'angela.dejesus@shopify.com'),
+STRUCT('Dominic Mostar', 'MAN', 'Tier 1', 'No', 'dominic.mostar@shopify.com'),
+STRUCT('Haidee Soto', 'MAN', 'Tier 2', 'No', 'haidee.soto@shopify.com'),
+STRUCT('Jasper Agbanglo', 'MAN', 'Tier 1', 'No', 'jasper.agbanglo@shopify.com'),
+STRUCT('Jeffrey Rozul', 'MAN', 'Tier 1', 'No', 'jeffrey.rozul@shopify.com'),
+STRUCT('Jefferson Anonas', 'MAN', 'Tier 2', 'No', 'jefferson.anonas@shopify.com'),
+STRUCT('Johanna Guzman', 'MAN', 'Tier 1', 'No', 'johanna.deguzman@shopify.com'),
+STRUCT('Joseph Jimenez', 'MAN', 'Tier 2', 'No', 'joseph.jimenez@shopify.com'),
+STRUCT('Rheyaleen Soriano', 'MAN', 'Tier 1', 'No', 'rheyaleen.soriano@shopify.com'),
+STRUCT('Sheila Agaban', 'MAN', 'Tier 2', 'No', 'sheila.agaban@shopify.com'),
+STRUCT('Veronica Musni', 'MAN', 'Tier 2', 'No', 'veronica.musni@shopify.com'),
+
+-- NOS Squad (from latest T1/T2 list)
+STRUCT('Angel Fernandez', 'NOS', 'Tier 2', 'No', 'angel.fernandez@shopify.com'),
+STRUCT('Bernard Alfonso', 'NOS', 'Tier 2', 'No', 'bernard.alfonso@shopify.com'),
+STRUCT('Blue Bautista', 'NOS', 'Tier 2', 'No', 'blue.bautista@shopify.com'),
+STRUCT('Camille Quizon', 'NOS', 'Tier 2', 'No', 'camille.quizon@shopify.com'),
+STRUCT('Caryl Rivera', 'NOS', 'Tier 2', 'No', 'caryl.rivera@shopify.com'),
+STRUCT('Charl Tagalog', 'NOS', 'Tier 2', 'No', 'charl.tagalog@shopify.com'),
+STRUCT('Dave Jor', 'NOS', 'Tier 2', 'No', 'dave.jor@shopify.com'),
+STRUCT('Jessierey Pascual', 'NOS', 'Tier 2', 'No', 'jessierey.pascual@shopify.com'),
+STRUCT('Lawrence Lo', 'NOS', 'Tier 2', 'No', 'Lawrence.Lo@shopify.com'),
+STRUCT('Nazareno Llenares', 'NOS', 'Tier 2', 'No', 'Nazareno.llenares@shopify.com'),
+STRUCT('Prince Tajonera', 'NOS', 'Tier 2', 'No', 'prince.tajonera@shopify.com'),
+STRUCT('Romel Obellano', 'NOS', 'Tier 2', 'No', 'romel.obellano@shopify.com'),
+STRUCT('Samantha Sales', 'NOS', 'Tier 2', 'No', 'samantha.sales@shopify.com'),
+
+-- KRM Squad (all are Tier 2 - Audit)  
+STRUCT('Bea Flores', 'KRM', 'Tier 2 - Audit', 'Yes', 'bea.flores@shopify.com'),
+STRUCT('Christine Jhane Tolentino', 'KRM', 'Tier 2 - Audit', 'Yes', 'christine.tolentino@shopify.com'),
+STRUCT('Ian Sanchez', 'KRM', 'Tier 2 - Audit', 'Yes', 'ian.sanchez@shopify.com'),
+STRUCT('Jenny-Lyn Lardizabal', 'KRM', 'Tier 2 - Audit', 'Yes', 'jenny-lyn.lardizabal@shopify.com'),
+STRUCT('Jolina Romero', 'KRM', 'Tier 2 - Audit', 'Yes', 'jolina.romero@shopify.com'),
+STRUCT('Justine Ignacio', 'KRM', 'Tier 2 - Audit', 'Yes', 'justine.ignacio@shopify.com'),
+STRUCT('Kimberly Alzona', 'KRM', 'Tier 2 - Audit', 'Yes', 'kimberly.alzona@shopify.com'),
+STRUCT('Marigold Ocampo', 'KRM', 'Tier 2 - Audit', 'Yes', 'marigold.ocampo@shopify.com'),
+STRUCT('Mark Gopez', 'KRM', 'Tier 2 - Audit', 'Yes', 'mark.gopez@shopify.com'),
+STRUCT('Shaira Salgado', 'KRM', 'Tier 2 - Audit', 'Yes', 'shaira.salgado@shopify.com'),
+
+-- RUE Squad (all are Tier 2 - Audit)
+STRUCT('Alvin Alipio', 'RUE', 'Tier 2 - Audit', 'Yes', 'alvin.alipio@shopify.com'),
+STRUCT('Cyrille Lacson Due', 'RUE', 'Tier 2 - Audit', 'Yes', 'cyrille.due@shopify.com'),
+STRUCT('Jid Dayrit', 'RUE', 'Tier 2 - Audit', 'Yes', 'jid.dayrit@shopify.com'),
+STRUCT('Juan Manio', 'RUE', 'Tier 2 - Audit', 'Yes', 'juan.manio@shopify.com'),
+STRUCT('Lev Maghinang', 'RUE', 'Tier 2 - Audit', 'Yes', 'lev.maghinang@shopify.com'),
+STRUCT('Louella Benedicto', 'RUE', 'Tier 2 - Audit', 'Yes', 'louella.benedicto@shopify.com'),
+STRUCT('Marina Bacatan', 'RUE', 'Tier 2 - Audit', 'Yes', 'marina.bacatan@shopify.com'),
+STRUCT('Mary Grace Ronquillo', 'RUE', 'Tier 2 - Audit', 'Yes', 'mary.ronquillo@shopify.com'),
+STRUCT('Mary Joyce Cubacub', 'RUE', 'Tier 2 - Audit', 'Yes', 'maryjoyce.cubacub@shopify.com'),
+STRUCT('Rosell Feliciano', 'RUE', 'Tier 2 - Audit', 'Yes', 'rosell.feliciano@shopify.com'),
+STRUCT('Yhana Valdez', 'RUE', 'Tier 2 - Audit', 'Yes', 'yhana.valdez@shopify.com'),
+
+-- ESCY Squad (all are Internal)
+STRUCT('Pamela Gunawan', 'ESCY', 'Internal', 'No', null),
+STRUCT('Said Montufar Maldonado', 'ESCY', 'Internal', 'No', null),
+STRUCT('Sabrina Cui', 'ESCY', 'Internal', 'No', null),
+STRUCT('Max Arvidsson', 'ESCY', 'Internal', 'No', null),
+STRUCT('Blake Galley', 'ESCY', 'Internal', 'No', null),
+STRUCT('Kivon Mayers', 'ESCY', 'Internal', 'No', null),
+STRUCT('Dominic Stelmach', 'ESCY', 'Internal', 'No', null)
+  ])
+),
+filtered_events AS (
+  SELECT *
+  FROM `shopify-dw.apps_and_developers.app_store_app_submission_events_v1`
+  WHERE
+    event_subcategory NOT IN (
+      'cambridge_scan_check', 'llm_listing_check', 'employee_review_page_load',
+      'developer_submission_requirement_panel_load', 'sentinel_session_tokens_check',
+      'deprecated_api_check', 'presubmission_configuration_requirements',
+      'presubmission_emergency_contact_requirement', 'app_presubmission_check_modal_open',
+      'automated_check_scan_request'
+    )
+    AND event_type NOT IN (
+      'developer_submission_events', 'automated_check'
+    )
+),
+submission_marker AS (
+  SELECT
+    app_store_app_submission_id,
+    app_store_app_submission_review_id,
+    MIN(CASE WHEN event_result = 'SUBMITTED' THEN event_timestamp END) AS submitted_at,
+    MIN(CASE WHEN event_result = 'APPROVED' THEN event_timestamp END) AS approved_at,
+    ARRAY_AGG(DISTINCT reviewer_name IGNORE NULLS) AS reviewers,
+    MIN(CASE WHEN reviewer_name IS NOT NULL AND event_result != 'SUBMITTED' THEN event_timestamp END) AS first_reviewer_action_at,
+    MIN(CASE WHEN reviewer_name IS NOT NULL AND event_result != 'SUBMITTED' THEN reviewer_name END) AS first_reviewer_name
+  FROM filtered_events
+  GROUP BY app_store_app_submission_id, app_store_app_submission_review_id
+),
+status_labels AS (
+  SELECT
+    sm.*,
+    DATE(sm.submitted_at) AS submission_date,
+    rm.squad_code,
+    rm.review_tier,
+    rm.tier_2_audit,
+    rm.email_address,
+    CASE
+      WHEN sm.approved_at IS NOT NULL THEN 'published'
+      WHEN sm.submitted_at IS NOT NULL 
+           AND sm.first_reviewer_action_at IS NULL 
+           AND TIMESTAMP_DIFF(CURRENT_TIMESTAMP(), sm.submitted_at, DAY) > 7 THEN 'stuck'
+      WHEN sm.submitted_at IS NOT NULL 
+           AND (sm.approved_at IS NULL OR sm.first_reviewer_action_at IS NULL) THEN 'in_review'
+      ELSE 'other'
+    END AS status
+  FROM submission_marker sm
+  LEFT JOIN reviewer_metadata rm
+    ON sm.first_reviewer_name = rm.reviewed_by
+)
+SELECT
+  submission_date,
+  COALESCE(squad_code, 'Unassigned') AS squad_code,
+  COALESCE(review_tier, 'None') AS review_tier,
+  COALESCE(first_reviewer_name, 'No Reviewer Yet') AS reviewer_name,
+  COUNTIF(submitted_at IS NOT NULL) AS apps_submitted,
+  COUNTIF(status = 'in_review') AS apps_in_review,
+  COUNTIF(status = 'published') AS apps_published,
+  COUNTIF(status = 'stuck') AS apps_stuck,
+  ROUND(AVG(TIMESTAMP_DIFF(COALESCE(first_reviewer_action_at, CURRENT_TIMESTAMP()), submitted_at, HOUR)),1) AS avg_hours_to_first_action,
+  ROUND(AVG(TIMESTAMP_DIFF(COALESCE(approved_at, CURRENT_TIMESTAMP()), submitted_at, HOUR)),1) AS avg_hours_to_publish
+FROM status_labels
+GROUP BY submission_date, squad_code, review_tier, first_reviewer_name
+ORDER BY submission_date DESC, squad_code, reviewer_name

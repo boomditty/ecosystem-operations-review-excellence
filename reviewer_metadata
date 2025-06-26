@@ -4,7 +4,7 @@ WITH reviewer_metadata AS (
 STRUCT('Adriane Guzman' AS reviewed_by, 'JFG' AS squad_code, 'Tier 2' AS review_tier, 'No' AS tier_2_audit, 'adriane.deguzman@shopify.com' AS email_address),
 STRUCT('Dionard Badion', 'JFG', 'Tier 1', 'No', 'dionard.badion@shopify.com'),
 STRUCT('Earl Quiambao', 'JFG', 'Tier 1', 'No', 'earl.quiambao@shopify.com'),
-STRUCT('Jeremiah M', 'JFG', 'Tier 1', 'No', null),
+STRUCT('Jeremiah M', 'JFG', 'Tier 1', 'No', 'jeremiah.mercado@shopify.com'),
 STRUCT('Justine Nieva', 'JFG', 'Tier 1', 'No', 'justine.nieva@shopify.com'),
 STRUCT('Kevin Alejo', 'JFG', 'Tier 2', 'No', 'kevin.alejo@shopify.com'),
 STRUCT('Mark Sibal', 'JFG', 'Tier 2', 'No', 'mark.sibal@shopify.com'),

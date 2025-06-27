@@ -81,83 +81,139 @@ WITH reviewer_metadata AS (
     STRUCT('Dominic Stelmach', 'ESCY', 'Internal', 'No')
   ])
 ),
-
-
+submission_times AS (
+  SELECT
+    app_store_app_submission_id,
+    MIN(CASE WHEN event_result = 'SUBMITTED' THEN event_timestamp END) AS queued_at,
+    MAX(CASE WHEN event_result = 'APPROVED' THEN event_timestamp END) AS screening_completed_at
+  FROM shopify-dw.apps_and_developers.app_store_app_submission_events_v1
+  GROUP BY app_store_app_submission_id
+),
 reviewer_stats AS (
- SELECT
-   s.reviewed_by,
-   rm.squad_code,
-   rm.review_tier,
-   rm.tier_2_audit,
-   DATE(s.screening_updated_at) AS screening_updated_date,
+  SELECT
+    s.reviewer_name AS reviewed_by,
+    rm.email_address,
+    rm.squad_code,
+    rm.review_tier,
+    rm.tier_2_audit,
+    DATE(s.event_timestamp) AS screening_updated_date,
 
-   COUNTIF(s.submission_review_status = 'approved') AS apps_published,
-   COUNTIF(s.submission_review_status = 'rejected') AS rejection_count,
-   COUNTIF(s.screening_completed_at IS NULL AND s.screening_updated_at IS NOT NULL) AS updates_made,
-   SUM(COALESCE(s.ticket_update_count, 0)) AS total_ticket_updates,
-   SUM(COALESCE(s.reqs_checked, 0)) AS total_requirements_checked,
+    SUM(CASE WHEN s.event_result = 'APPROVED' THEN 1 ELSE 0 END) AS apps_published,
+    SUM(CASE WHEN s.event_result = 'REJECTED' THEN 1 ELSE 0 END) AS rejection_count,
+    SUM(CASE WHEN s.event_result = 'AWAITING_PARTNER' THEN 1 ELSE 0 END) AS updates_made,
 
-   -- Average duration in minutes (uses CURRENT_TIMESTAMP if screening not completed)
-   AVG(
-     SAFE_CAST(
-       TIMESTAMP_DIFF(
-         COALESCE(s.screening_completed_at, CURRENT_TIMESTAMP()),
-         s.queued_at,
-         MINUTE
-       ) AS FLOAT64
-     )
-   ) AS avg_review_duration_mins,
+    -- New: total_ticket_updates = ticket reasons
+    SUM(CASE WHEN s.event_reason IN ('reviewer_selection','blocking') THEN 1 ELSE 0 END) AS total_ticket_updates,
 
-   -- Average duration in days
-   AVG(
-     SAFE_CAST(
-       TIMESTAMP_DIFF(
-         COALESCE(s.screening_completed_at, CURRENT_TIMESTAMP()),
-         s.queued_at,
-         MINUTE
-       ) / 1440.0 AS FLOAT64
-     )
-   ) AS avg_review_duration_days
+    -- New: total_requirements_checked = event_type = 'submission_review_assessment'
+    COUNT(DISTINCT CASE
+      WHEN s.event_type = 'submission_review_assessment' THEN CONCAT(s.app_store_app_submission_id, '-', s.event_timestamp)
+    END) AS total_requirements_checked,
 
- FROM
-   `sdp-prd-build-ecosystem.scratch.ss_snapshot` s
- JOIN reviewer_metadata rm
-   ON s.reviewed_by = rm.reviewed_by
- WHERE
-   rm.review_tier != 'Tier 2 - Audit'
-   AND rm.squad_code != 'ESCY'
-   AND s.screening_updated_at IS NOT NULL
- GROUP BY
-   s.reviewed_by, rm.squad_code, rm.review_tier, rm.tier_2_audit, DATE(s.screening_updated_at)
+    COUNT(DISTINCT CASE
+      WHEN s.event_result = 'SUBMITTED'
+       AND NOT EXISTS (
+         SELECT 1
+         FROM shopify-dw.apps_and_developers.app_store_app_submission_events_v1 s2
+         WHERE s2.app_store_app_submission_id = s.app_store_app_submission_id
+           AND s2.event_result IN ('APPROVED','ESCALATED','WITHDRAWN')
+       )
+      THEN s.app_store_app_submission_id
+    END) AS apps_in_review,
+
+    AVG(
+      SAFE_CAST(
+        TIMESTAMP_DIFF(
+          COALESCE(st.screening_completed_at, CURRENT_TIMESTAMP()),
+          st.queued_at,
+          MINUTE
+        ) AS FLOAT64
+      )
+    ) AS avg_review_duration_mins,
+
+    AVG(
+      SAFE_CAST(
+        TIMESTAMP_DIFF(
+          COALESCE(st.screening_completed_at, CURRENT_TIMESTAMP()),
+          st.queued_at,
+          MINUTE
+        ) / 1440.0 AS FLOAT64
+      )
+    ) AS avg_review_duration_days
+
+  FROM shopify-dw.apps_and_developers.app_store_app_submission_events_v1 s
+  LEFT JOIN reviewer_metadata rm ON s.reviewer_name = rm.reviewed_by
+  LEFT JOIN submission_times st ON s.app_store_app_submission_id = st.app_store_app_submission_id
+  GROUP BY
+    s.reviewer_name, rm.email_address, rm.squad_code, rm.review_tier, rm.tier_2_audit, DATE(s.event_timestamp)
+),
+workday_stats AS (
+  SELECT
+    reviewed_by,
+    EXTRACT(YEAR FROM screening_updated_date) AS yyyy,
+    EXTRACT(MONTH FROM screening_updated_date) AS mm,
+    COUNT(DISTINCT screening_updated_date) AS workdays_in_month
+  FROM reviewer_stats
+  GROUP BY reviewed_by, yyyy, mm
 )
+
 SELECT
- reviewed_by,
- squad_code,
- review_tier,
- tier_2_audit,
- screening_updated_date,
- apps_published,
- rejection_count,
- updates_made,
- total_ticket_updates,
- total_requirements_checked,
- avg_review_duration_mins,
- avg_review_duration_days,
- (
-   (
-     apps_published * 1.0
-     + rejection_count * 0.5
-     + total_ticket_updates * 0.1
-     + total_requirements_checked * 0.01
-   )
+  r.reviewed_by,
+  r.email_address,
+  r.squad_code,
+  r.review_tier,
+  r.tier_2_audit,
+  r.screening_updated_date,
+  r.apps_published,
+  r.apps_in_review,
+  r.rejection_count,
+  r.updates_made,
+  r.total_ticket_updates,
+  r.total_requirements_checked,
+  r.avg_review_duration_mins,
+  r.avg_review_duration_days,
+
+  -- Metric breakdown (explicit columns)
+  r.apps_published * 1.0 AS apps_published_weight,
+  r.rejection_count * 0.5 AS rejection_count_weight,
+  r.total_ticket_updates * 0.1 AS total_ticket_updates_weight,
+  r.total_requirements_checked * 0.01 AS total_requirements_checked_weight,
+
+  -- The total (numerator) for reviewer_efficiency_metric_days for transparency
+  (
+    r.apps_published * 1.0
+    + r.rejection_count * 0.5
+    + r.total_ticket_updates * 0.1
+    + r.total_requirements_checked * 0.01
+  ) AS reviewer_efficiency_numerator,
+
+  -- The main metric (as before)
+  (
+    r.apps_published * 1.0
+    + r.rejection_count * 0.5
+    + r.total_ticket_updates * 0.1
+    + r.total_requirements_checked * 0.01
+  ) / NULLIF(r.avg_review_duration_days, 0)
+  AS reviewer_efficiency_metric_days,
+
+  (
+   (r.apps_published
+    + r.rejection_count
+    + r.total_ticket_updates)
    /
-   NULLIF(avg_review_duration_days, 0)
- ) AS reviewer_efficiency_metric_days
+   (45 / NULLIF(w.workdays_in_month, 0))
+  ) AS reviewer_efficiency_pct_of_target
+
 FROM
- reviewer_stats
+  reviewer_stats AS r
+JOIN
+  workday_stats AS w
+    ON r.reviewed_by = w.reviewed_by
+   AND EXTRACT(YEAR FROM r.screening_updated_date) = w.yyyy
+   AND EXTRACT(MONTH FROM r.screening_updated_date) = w.mm
 ORDER BY
- screening_updated_date DESC,
- reviewer_efficiency_metric_days DESC;
+  r.screening_updated_date DESC,
+  reviewer_efficiency_metric_days DESC
 
 2️⃣ **REM Drill Down**
 
@@ -243,59 +299,97 @@ WITH reviewer_metadata AS (
   ])
 ),
 
+base_events AS (
+  SELECT
+    app_store_app_submission_id,
+    reviewer_name,
+    event_result,
+    event_type,
+    event_reason,
+    event_timestamp,
+    session_token
+  FROM
+    `shopify-dw.apps_and_developers.app_store_app_submission_events_v1`
+  WHERE
+    event_type NOT IN ('automated_check', 'developer_submission_events')
+),
+
+-- Requirements checked per app_store_app_submission_id (distinct event_type = 'submission_review_assessment')
+reqs_checked AS (
+  SELECT
+    app_store_app_submission_id,
+    COUNT(DISTINCT CONCAT(app_store_app_submission_id, '-', event_timestamp)) AS reqs_checked_contribution
+  FROM `shopify-dw.apps_and_developers.app_store_app_submission_events_v1`
+  WHERE event_type = 'submission_review_assessment'
+  GROUP BY app_store_app_submission_id
+),
+
+-- Ticket update count per app_store_app_submission_id where event_reason
+ticket_updates AS (
+  SELECT
+    app_store_app_submission_id,
+    COUNTIF(event_reason IN ('reviewer_selection', 'blocking')) AS ticket_update_contribution
+  FROM `shopify-dw.apps_and_developers.app_store_app_submission_events_v1`
+  GROUP BY app_store_app_submission_id
+),
+
+submission_summary AS (
+  SELECT
+    app_store_app_submission_id,
+    ANY_VALUE(reviewer_name) AS reviewed_by,
+    MIN(CASE WHEN event_result = 'SUBMITTED' THEN event_timestamp END) AS queued_at,
+    MAX(CASE WHEN event_result = 'APPROVED' THEN event_timestamp END) AS screening_completed_at,
+    COUNTIF(event_result = 'REJECTED') > 0 AS has_rejection,
+    COUNTIF(event_result = 'AWAITING_PARTNER') > 0 AS has_awaiting_partner,
+    COUNTIF(event_result = 'ESCALATED') > 0 AS has_escalated,
+    COUNTIF(event_result = 'INTERNAL_HOLD') > 0 AS has_internal_hold
+  FROM base_events
+  GROUP BY app_store_app_submission_id
+),
+
 drill_base AS (
-SELECT
- s.app_submission_id,
-  CONCAT('https://apps.shopify.com/internal/app_submissions/', s.app_submission_id, '/edit') AS app_submission_link,
- s.reviewed_by,
- rm.squad_code,
- rm.review_tier,
- rm.tier_2_audit,
- s.submission_review_status,
- DATE(s.screening_updated_at) AS screening_updated_date,  -- For Looker Studio date filtering
- s.screening_updated_at,
- s.screening_completed_at,
- s.queued_at,
- s.ticket_update_count,
- s.reqs_checked,
-
-
- -- Efficiency metric breakdown for transparency per review:
- -- Each boolean is 1 if true, else 0
- -- These can be summed in Looker Studio for reviewer-level contribution
- CASE WHEN s.submission_review_status = 'approved' THEN 1 ELSE 0 END AS approved_contribution,
- CASE WHEN s.submission_review_status = 'rejected' THEN 1 ELSE 0 END AS rejected_contribution,
- COALESCE(s.ticket_update_count, 0) AS ticket_update_contribution,
- COALESCE(s.reqs_checked, 0) AS reqs_checked_contribution,
-
-
-SAFE_CAST(
-  TIMESTAMP_DIFF(
-    COALESCE(s.screening_completed_at, CURRENT_TIMESTAMP()),
-    s.queued_at,
-    MINUTE
-  ) AS FLOAT64
-) AS review_duration_mins,
-
-SAFE_CAST(
-  TIMESTAMP_DIFF(
-    COALESCE(s.screening_completed_at, CURRENT_TIMESTAMP()),
-    s.queued_at,
-    MINUTE
-  ) / 1440.0 AS FLOAT64
-) AS review_duration_days
-
-
-FROM
- `sdp-prd-build-ecosystem.scratch.ss_snapshot` s
-JOIN
- reviewer_metadata rm
- ON s.reviewed_by = rm.reviewed_by
-WHERE
- rm.review_tier != 'Tier 2 - Audit'
- AND rm.squad_code != 'ESCY'
- AND s.screening_updated_at IS NOT NULL
-
+  SELECT
+    ss.app_store_app_submission_id,
+    ss.reviewed_by,
+    rm.squad_code,
+    rm.review_tier,
+    rm.tier_2_audit,
+    ss.queued_at,
+    ss.screening_completed_at,
+    CURRENT_TIMESTAMP() AS as_of_now,
+    CASE
+      WHEN screening_completed_at IS NOT NULL THEN 'approved'
+      WHEN has_rejection THEN 'rejected'
+      WHEN has_awaiting_partner THEN 'awaiting_partner'
+      WHEN has_escalated THEN 'escalated'
+      WHEN has_internal_hold THEN 'internal_hold'
+      WHEN queued_at IS NOT NULL THEN 'submitted'
+      ELSE 'unknown'
+    END AS submission_review_status,
+    CASE WHEN screening_completed_at IS NOT NULL THEN 1 ELSE 0 END AS approved_contribution,
+    CASE WHEN has_rejection THEN 1 ELSE 0 END AS rejected_contribution,
+    tu.ticket_update_contribution,
+    rc.reqs_checked_contribution,
+    SAFE_CAST(
+      TIMESTAMP_DIFF(COALESCE(screening_completed_at, CURRENT_TIMESTAMP()), queued_at, MINUTE) AS FLOAT64
+    ) AS review_duration_mins,
+    SAFE_CAST(
+      TIMESTAMP_DIFF(COALESCE(screening_completed_at, CURRENT_TIMESTAMP()), queued_at, MINUTE) / 1440.0 AS FLOAT64
+    ) AS review_duration_days,
+    CONCAT('https://apps.shopify.com/internal/app_submissions/', CAST(ss.app_store_app_submission_id AS STRING), '/edit') AS app_submission_link,
+    DATE(COALESCE(screening_completed_at, queued_at)) AS screening_updated_date
+  FROM
+    submission_summary ss
+  JOIN reviewer_metadata rm
+    ON ss.reviewed_by = rm.reviewed_by
+  LEFT JOIN reqs_checked rc
+    ON ss.app_store_app_submission_id = rc.app_store_app_submission_id
+  LEFT JOIN ticket_updates tu
+    ON ss.app_store_app_submission_id = tu.app_store_app_submission_id
+  WHERE
+    rm.review_tier != 'Tier 2 - Audit'
+    AND rm.squad_code != 'ESCY'
+    AND ss.queued_at IS NOT NULL
 )
 
 SELECT

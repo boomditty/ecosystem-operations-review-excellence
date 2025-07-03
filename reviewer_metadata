@@ -12,6 +12,8 @@ STRUCT('Mary Esguerra', 'JFG', 'Tier 2', 'No', 'mary.esguerra@shopify.com'),
 STRUCT('Ramil Dimacuha', 'JFG', 'Tier 1', 'No', 'ramil.dimacuha@shopify.com'),
 STRUCT('Rommel Licup Jr', 'JFG', 'Tier 2', 'No', 'rommel.licup@shopify.com'),
 STRUCT('Roselyn Santos', 'JFG', 'Tier 1', 'No', 'roselyn.santos@shopify.com'),
+STRUCT('Ronnel Capunpue', 'JFG', 'Tier 1', 'No', 'ronnel.capunpue@shopify.com'),
+STRUCT('Liezl Punzalan', 'JFG', 'Tier 1', 'No', 'liezl.punzalan@shopify.com'),
 
 -- MAN Squad (from latest T1/T2 list)
 STRUCT('Angela De Jesus', 'MAN', 'Tier 1', 'No', 'angela.dejesus@shopify.com'),
@@ -25,6 +27,8 @@ STRUCT('Joseph Jimenez', 'MAN', 'Tier 2', 'No', 'joseph.jimenez@shopify.com'),
 STRUCT('Rheyaleen Soriano', 'MAN', 'Tier 1', 'No', 'rheyaleen.soriano@shopify.com'),
 STRUCT('Sheila Agaban', 'MAN', 'Tier 2', 'No', 'sheila.agaban@shopify.com'),
 STRUCT('Veronica Musni', 'MAN', 'Tier 2', 'No', 'veronica.musni@shopify.com'),
+STRUCT('Kevin Jay Garcia', 'MAN', 'Tier 1', 'No', 'kevin.garcia@shopify.com'),
+STRUCT('Princess Severino', 'MAN', 'Tier 1', 'No', 'princes.severino@shopify.com'),
 
 -- NOS Squad (from latest T1/T2 list)
 STRUCT('Angel Fernandez', 'NOS', 'Tier 2', 'No', 'angel.fernandez@shopify.com'),
@@ -40,6 +44,7 @@ STRUCT('Nazareno Llenares', 'NOS', 'Tier 2', 'No', 'Nazareno.llenares@shopify.co
 STRUCT('Prince Tajonera', 'NOS', 'Tier 2', 'No', 'prince.tajonera@shopify.com'),
 STRUCT('Romel Obellano', 'NOS', 'Tier 2', 'No', 'romel.obellano@shopify.com'),
 STRUCT('Samantha Sales', 'NOS', 'Tier 2', 'No', 'samantha.sales@shopify.com'),
+STRUCT('Dave Vital', 'NOS', 'Tier 1', 'No', 'dave.vital@shopify.com'),
 
 -- KRM Squad (all are Tier 2 - Audit)  
 STRUCT('Bea Flores', 'KRM', 'Tier 2 - Audit', 'Yes', 'bea.flores@shopify.com'),
@@ -67,12 +72,12 @@ STRUCT('Rosell Feliciano', 'RUE', 'Tier 2 - Audit', 'Yes', 'rosell.feliciano@sho
 STRUCT('Yhana Valdez', 'RUE', 'Tier 2 - Audit', 'Yes', 'yhana.valdez@shopify.com'),
 
 -- ESCY Squad (all are Internal)
-STRUCT('Pamela Gunawan', 'ESCY', 'Internal', 'No', null),
-STRUCT('Said Montufar Maldonado', 'ESCY', 'Internal', 'No', null),
-STRUCT('Sabrina Cui', 'ESCY', 'Internal', 'No', null),
-STRUCT('Max Arvidsson', 'ESCY', 'Internal', 'No', null),
-STRUCT('Blake Galley', 'ESCY', 'Internal', 'No', null),
-STRUCT('Kivon Mayers', 'ESCY', 'Internal', 'No', null),
-STRUCT('Dominic Stelmach', 'ESCY', 'Internal', 'No', null)
+STRUCT('Pamela Gunawan', 'ESCY', 'Internal', 'No', 'pamela.gunawan@shopify.com'),
+STRUCT('Said Montufar Maldonado', 'ESCY', 'Internal', 'No', 'said.montufarmaldonado@shopify.com'),
+STRUCT('Sabrina Cui', 'ESCY', 'Internal', 'No', 'sabrina.cui@shopify.com'),
+STRUCT('Max Arvidsson', 'ESCY', 'Internal', 'No', 'max.arvidsson@shopify.com'),
+STRUCT('Blake Galley', 'ESCY', 'Internal', 'No', 'blake.galley@shopify.com'),
+STRUCT('Kivon Mayers', 'ESCY', 'Internal', 'No', 'kivon.mayers@shopify.com'),
+STRUCT('Dominic Stelmach', 'ESCY', 'Internal', 'No', 'dom.stelmach@shopify.com')
   ])
 )

@@ -1,0 +1,185 @@
+WITH reviewer_metadata AS (
+  SELECT * FROM UNNEST([
+-- JFG Squad (from latest T1/T2 list)
+STRUCT('Adriane Guzman' AS reviewed_by, 'JFG' AS squad_code, 'Tier 2' AS review_tier, 'No' AS tier_2_audit, 'adriane.deguzman@shopify.com' AS email_address),
+STRUCT('Dionard Badion', 'JFG', 'Tier 1', 'No', 'dionard.badion@shopify.com'),
+STRUCT('Earl Quiambao', 'JFG', 'Tier 1', 'No', 'earl.quiambao@shopify.com'),
+STRUCT('Jeremiah M', 'JFG', 'Tier 1', 'No', 'jeremiah.mercado@shopify.com'),
+STRUCT('Justine Nieva', 'JFG', 'Tier 1', 'No', 'justine.nieva@shopify.com'),
+STRUCT('Kevin Alejo', 'JFG', 'Tier 2', 'No', 'kevin.alejo@shopify.com'),
+STRUCT('Mark Sibal', 'JFG', 'Tier 2', 'No', 'mark.sibal@shopify.com'),
+STRUCT('Mary Esguerra', 'JFG', 'Tier 2', 'No', 'mary.esguerra@shopify.com'),
+STRUCT('Ramil Dimacuha', 'JFG', 'Tier 1', 'No', 'ramil.dimacuha@shopify.com'),
+STRUCT('Rommel Licup Jr', 'JFG', 'Tier 2', 'No', 'rommel.licup@shopify.com'),
+STRUCT('Roselyn Santos', 'JFG', 'Tier 1', 'No', 'roselyn.santos@shopify.com'),
+STRUCT('Ronnel Capunpue', 'JFG', 'Tier 1', 'No', 'ronnel.capunpue@shopify.com'),
+STRUCT('Liezl Punzalan', 'JFG', 'Tier 1', 'No', 'liezl.punzalan@shopify.com'),
+
+-- MAN Squad (from latest T1/T2 list)
+STRUCT('Angela De Jesus', 'MAN', 'Tier 1', 'No', 'angela.dejesus@shopify.com'),
+STRUCT('Dominic Mostar', 'MAN', 'Tier 1', 'No', 'dominic.mostar@shopify.com'),
+STRUCT('Haidee Soto', 'MAN', 'Tier 2', 'No', 'haidee.soto@shopify.com'),
+STRUCT('Jasper Agbanglo', 'MAN', 'Tier 1', 'No', 'jasper.agbanglo@shopify.com'),
+STRUCT('Jeffrey Rozul', 'MAN', 'Tier 1', 'No', 'jeffrey.rozul@shopify.com'),
+STRUCT('Jefferson Anonas', 'MAN', 'Tier 2', 'No', 'jefferson.anonas@shopify.com'),
+STRUCT('Johanna Guzman', 'MAN', 'Tier 1', 'No', 'johanna.deguzman@shopify.com'),
+STRUCT('Joseph Jimenez', 'MAN', 'Tier 2', 'No', 'joseph.jimenez@shopify.com'),
+STRUCT('Rheyaleen Soriano', 'MAN', 'Tier 1', 'No', 'rheyaleen.soriano@shopify.com'),
+STRUCT('Sheila Agaban', 'MAN', 'Tier 2', 'No', 'sheila.agaban@shopify.com'),
+STRUCT('Veronica Musni', 'MAN', 'Tier 2', 'No', 'veronica.musni@shopify.com'),
+STRUCT('Kevin Jay Garcia', 'MAN', 'Tier 1', 'No', 'kevin.garcia@shopify.com'),
+STRUCT('Princess Severino', 'MAN', 'Tier 1', 'No', 'princes.severino@shopify.com'),
+
+-- NOS Squad (from latest T1/T2 list)
+STRUCT('Angel Fernandez', 'NOS', 'Tier 2', 'No', 'angel.fernandez@shopify.com'),
+STRUCT('Bernard Alfonso', 'NOS', 'Tier 2', 'No', 'bernard.alfonso@shopify.com'),
+STRUCT('Blue Bautista', 'NOS', 'Tier 2', 'No', 'blue.bautista@shopify.com'),
+STRUCT('Camille Quizon', 'NOS', 'Tier 2', 'No', 'camille.quizon@shopify.com'),
+STRUCT('Caryl Rivera', 'NOS', 'Tier 2', 'No', 'caryl.rivera@shopify.com'),
+STRUCT('Charl Tagalog', 'NOS', 'Tier 2', 'No', 'charl.tagalog@shopify.com'),
+STRUCT('Dave Jor', 'NOS', 'Tier 2', 'No', 'dave.jor@shopify.com'),
+STRUCT('Jessierey Pascual', 'NOS', 'Tier 2', 'No', 'jessierey.pascual@shopify.com'),
+STRUCT('Lawrence Lo', 'NOS', 'Tier 2', 'No', 'Lawrence.Lo@shopify.com'),
+STRUCT('Nazareno Llenares', 'NOS', 'Tier 2', 'No', 'Nazareno.llenares@shopify.com'),
+STRUCT('Prince Tajonera', 'NOS', 'Tier 2', 'No', 'prince.tajonera@shopify.com'),
+STRUCT('Romel Obellano', 'NOS', 'Tier 2', 'No', 'romel.obellano@shopify.com'),
+STRUCT('Samantha Sales', 'NOS', 'Tier 2', 'No', 'samantha.sales@shopify.com'),
+STRUCT('Dave Vital', 'NOS', 'Tier 1', 'No', 'dave.vital@shopify.com'),
+
+-- KRM Squad (all are Tier 2 - Audit)  
+STRUCT('Bea Flores', 'KRM', 'Tier 2 - Audit', 'Yes', 'bea.flores@shopify.com'),
+STRUCT('Christine Jhane Tolentino', 'KRM', 'Tier 2 - Audit', 'Yes', 'christine.tolentino@shopify.com'),
+STRUCT('Ian Sanchez', 'KRM', 'Tier 2 - Audit', 'Yes', 'ian.sanchez@shopify.com'),
+STRUCT('Jenny-Lyn Lardizabal', 'KRM', 'Tier 2 - Audit', 'Yes', 'jenny-lyn.lardizabal@shopify.com'),
+STRUCT('Jolina Romero', 'KRM', 'Tier 2 - Audit', 'Yes', 'jolina.romero@shopify.com'),
+STRUCT('Justine Ignacio', 'KRM', 'Tier 2 - Audit', 'Yes', 'justine.ignacio@shopify.com'),
+STRUCT('Kimberly Alzona', 'KRM', 'Tier 2 - Audit', 'Yes', 'kimberly.alzona@shopify.com'),
+STRUCT('Marigold Ocampo', 'KRM', 'Tier 2 - Audit', 'Yes', 'marigold.ocampo@shopify.com'),
+STRUCT('Mark Gopez', 'KRM', 'Tier 2 - Audit', 'Yes', 'mark.gopez@shopify.com'),
+STRUCT('Shaira Salgado', 'KRM', 'Tier 2 - Audit', 'Yes', 'shaira.salgado@shopify.com'),
+
+-- RUE Squad (all are Tier 2 - Audit)
+STRUCT('Alvin Alipio', 'RUE', 'Tier 2 - Audit', 'Yes', 'alvin.alipio@shopify.com'),
+STRUCT('Cyrille Lacson Due', 'RUE', 'Tier 2 - Audit', 'Yes', 'cyrille.due@shopify.com'),
+STRUCT('Jid Dayrit', 'RUE', 'Tier 2 - Audit', 'Yes', 'jid.dayrit@shopify.com'),
+STRUCT('Juan Manio', 'RUE', 'Tier 2 - Audit', 'Yes', 'juan.manio@shopify.com'),
+STRUCT('Lev Maghinang', 'RUE', 'Tier 2 - Audit', 'Yes', 'lev.maghinang@shopify.com'),
+STRUCT('Louella Benedicto', 'RUE', 'Tier 2 - Audit', 'Yes', 'louella.benedicto@shopify.com'),
+STRUCT('Marina Bacatan', 'RUE', 'Tier 2 - Audit', 'Yes', 'marina.bacatan@shopify.com'),
+STRUCT('Mary Grace Ronquillo', 'RUE', 'Tier 2 - Audit', 'Yes', 'mary.ronquillo@shopify.com'),
+STRUCT('Mary Joyce Cubacub', 'RUE', 'Tier 2 - Audit', 'Yes', 'maryjoyce.cubacub@shopify.com'),
+STRUCT('Rosell Feliciano', 'RUE', 'Tier 2 - Audit', 'Yes', 'rosell.feliciano@shopify.com'),
+STRUCT('Yhana Valdez', 'RUE', 'Tier 2 - Audit', 'Yes', 'yhana.valdez@shopify.com'),
+
+-- ESCY Squad (all are Internal)
+STRUCT('Pamela Gunawan', 'ESCY', 'Internal', 'No', 'pamela.gunawan@shopify.com'),
+STRUCT('Said Montufar Maldonado', 'ESCY', 'Internal', 'No', 'said.montufarmaldonado@shopify.com'),
+STRUCT('Sabrina Cui', 'ESCY', 'Internal', 'No', 'sabrina.cui@shopify.com'),
+STRUCT('Max Arvidsson', 'ESCY', 'Internal', 'No', 'max.arvidsson@shopify.com'),
+STRUCT('Blake Galley', 'ESCY', 'Internal', 'No', 'blake.galley@shopify.com'),
+STRUCT('Kivon Mayers', 'ESCY', 'Internal', 'No', 'kivon.mayers@shopify.com'),
+STRUCT('Dominic Stelmach', 'ESCY', 'Internal', 'No', 'dom.stelmach@shopify.com')
+  ])
+),
+
+submission_times AS (
+  SELECT
+    app_store_app_submission_id,
+    MIN(CASE WHEN event_result = 'SUBMITTED' THEN event_timestamp END) AS queued_at,
+    MAX(CASE WHEN event_result IN ('APPROVED','REJECTED') THEN event_timestamp END) AS screening_completed_at
+  FROM `shopify-dw.apps_and_developers.app_store_app_submission_events_v1`
+  GROUP BY app_store_app_submission_id
+),
+reviewer_stats AS (
+  SELECT
+    s.reviewer_name AS reviewed_by,
+    rm.email_address,
+    rm.squad_code,
+    rm.review_tier,
+    rm.tier_2_audit,
+    DATE(s.event_timestamp) AS screening_updated_date,
+
+    SUM(CASE WHEN s.event_result = 'APPROVED' THEN 1 ELSE 0 END) AS apps_published,
+    SUM(CASE WHEN s.event_result = 'REJECTED' THEN 1 ELSE 0 END) AS rejection_count,
+    SUM(CASE WHEN s.event_result = 'AWAITING_PARTNER' THEN 1 ELSE 0 END) AS updates_made,
+
+    SUM(CASE WHEN s.event_reason IN ('reviewer_selection', 'blocking') THEN 1 ELSE 0 END) AS total_ticket_updates,
+
+    COUNT(DISTINCT CASE
+      WHEN s.event_type = 'submission_review_assessment' THEN CONCAT(s.app_store_app_submission_id, '-', s.event_timestamp)
+    END) AS total_requirements_checked,
+
+    AVG(
+      SAFE_CAST(
+        TIMESTAMP_DIFF(
+          COALESCE(st.screening_completed_at, CURRENT_TIMESTAMP()),
+          st.queued_at,
+          MINUTE
+        ) AS FLOAT64
+      )
+    ) AS avg_review_duration_mins,
+
+    AVG(
+      SAFE_CAST(
+        TIMESTAMP_DIFF(
+          COALESCE(st.screening_completed_at, CURRENT_TIMESTAMP()),
+          st.queued_at,
+          MINUTE
+        ) / 1440.0 AS FLOAT64
+      )
+    ) AS avg_review_duration_days
+
+  FROM `shopify-dw.apps_and_developers.app_store_app_submission_events_v1` s
+  JOIN reviewer_metadata rm ON s.reviewer_name = rm.reviewed_by
+  LEFT JOIN submission_times st ON s.app_store_app_submission_id = st.app_store_app_submission_id
+  WHERE s.reviewer_name IS NOT NULL
+  GROUP BY
+    s.reviewer_name, rm.email_address, rm.squad_code, rm.review_tier, rm.tier_2_audit, DATE(s.event_timestamp)
+),
+per_day_rem AS (
+  SELECT
+    r.reviewed_by,
+    r.screening_updated_date,
+    EXTRACT(YEAR FROM r.screening_updated_date) AS yyyy,
+    EXTRACT(MONTH FROM r.screening_updated_date) AS mm,
+    EXTRACT(ISOWEEK FROM r.screening_updated_date) AS iso_week,
+    -- The REM (reviewer efficiency metric) as per your calculation
+    (
+      r.apps_published * 1.0
+      + r.rejection_count * 0.5
+      + r.total_ticket_updates * 0.1
+      + r.total_requirements_checked * 0.01
+    ) / NULLIF(r.avg_review_duration_days, 0)
+      AS reviewer_efficiency_metric_days
+  FROM reviewer_stats r
+  WHERE r.screening_updated_date >= '2024-01-01'
+)
+
+-- Weekly and Monthly historical REM
+SELECT
+  'WEEKLY' AS agg_level,
+  yyyy,
+  iso_week AS week_of_year,
+  NULL AS mm,
+  MAX(reviewer_efficiency_metric_days) AS max_rem,
+  APPROX_QUANTILES(reviewer_efficiency_metric_days, 4)[OFFSET(3)] AS p75_rem,
+  AVG(reviewer_efficiency_metric_days) AS avg_rem
+FROM per_day_rem
+WHERE reviewer_efficiency_metric_days IS NOT NULL
+GROUP BY yyyy, iso_week
+
+UNION ALL
+
+SELECT
+  'MONTHLY' AS agg_level,
+  yyyy,
+  NULL AS week_of_year,
+  mm,
+  MAX(reviewer_efficiency_metric_days) AS max_rem,
+  APPROX_QUANTILES(reviewer_efficiency_metric_days, 4)[OFFSET(3)] AS p75_rem,
+  AVG(reviewer_efficiency_metric_days) AS avg_rem
+FROM per_day_rem
+WHERE reviewer_efficiency_metric_days IS NOT NULL
+GROUP BY yyyy, mm
+
+ORDER BY agg_level, yyyy DESC, COALESCE(week_of_year, mm) DESC

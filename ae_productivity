@@ -1,0 +1,49 @@
+WITH reviewer_metadata AS (
+  SELECT * FROM UNNEST([
+    STRUCT('Bea Flores' AS reviewer_name, 'KRM' AS squad, 'Tier 2 - Audit' AS tier, 'Yes' AS is_active, 'bea.flores@shopify.com' AS email),
+    STRUCT('Christine Jhane Tolentino' AS reviewer_name, 'KRM' AS squad, 'Tier 2 - Audit' AS tier, 'Yes' AS is_active, 'christine.tolentino@shopify.com' AS email),
+    STRUCT('Ian Sanchez' AS reviewer_name, 'KRM' AS squad, 'Tier 2 - Audit' AS tier, 'Yes' AS is_active, 'ian.sanchez@shopify.com' AS email),
+    STRUCT('Jenny-Lyn Lardizabal' AS reviewer_name, 'KRM' AS squad, 'Tier 2 - Audit' AS tier, 'Yes' AS is_active, 'jenny-lyn.lardizabal@shopify.com' AS email),
+    STRUCT('Jolina Romero' AS reviewer_name, 'KRM' AS squad, 'Tier 2 - Audit' AS tier, 'Yes' AS is_active, 'jolina.romero@shopify.com' AS email),
+    STRUCT('Justine Ignacio' AS reviewer_name, 'KRM' AS squad, 'Tier 2 - Audit' AS tier, 'Yes' AS is_active, 'justine.ignacio@shopify.com' AS email),
+    STRUCT('Kimberly Alzona' AS reviewer_name, 'KRM' AS squad, 'Tier 2 - Audit' AS tier, 'Yes' AS is_active, 'kimberly.alzona@shopify.com' AS email),
+    STRUCT('Marigold Ocampo' AS reviewer_name, 'KRM' AS squad, 'Tier 2 - Audit' AS tier, 'Yes' AS is_active, 'marigold.ocampo@shopify.com' AS email),
+    STRUCT('Mark Gopez' AS reviewer_name, 'KRM' AS squad, 'Tier 2 - Audit' AS tier, 'Yes' AS is_active, 'mark.gopez@shopify.com' AS email),
+    STRUCT('Shaira Salgado' AS reviewer_name, 'KRM' AS squad, 'Tier 2 - Audit' AS tier, 'Yes' AS is_active, 'shaira.salgado@shopify.com' AS email),
+
+    STRUCT('Alvin Alipio' AS reviewer_name, 'RUE' AS squad, 'Tier 2 - Audit' AS tier, 'Yes' AS is_active, 'alvin.alipio@shopify.com' AS email),
+    STRUCT('Cyrille Lacson Due' AS reviewer_name, 'RUE' AS squad, 'Tier 2 - Audit' AS tier, 'Yes' AS is_active, 'cyrille.due@shopify.com' AS email),
+    STRUCT('Jid Dayrit' AS reviewer_name, 'RUE' AS squad, 'Tier 2 - Audit' AS tier, 'Yes' AS is_active, 'jid.dayrit@shopify.com' AS email),
+    STRUCT('Juan Manio' AS reviewer_name, 'RUE' AS squad, 'Tier 2 - Audit' AS tier, 'Yes' AS is_active, 'juan.manio@shopify.com' AS email),
+    STRUCT('Lev Maghinang' AS reviewer_name, 'RUE' AS squad, 'Tier 2 - Audit' AS tier, 'Yes' AS is_active, 'lev.maghinang@shopify.com' AS email),
+    STRUCT('Louella Benedicto' AS reviewer_name, 'RUE' AS squad, 'Tier 2 - Audit' AS tier, 'Yes' AS is_active, 'louella.benedicto@shopify.com' AS email),
+    STRUCT('Marina Bacatan' AS reviewer_name, 'RUE' AS squad, 'Tier 2 - Audit' AS tier, 'Yes' AS is_active, 'marina.bacatan@shopify.com' AS email),
+    STRUCT('Mary Grace Ronquillo' AS reviewer_name, 'RUE' AS squad, 'Tier 2 - Audit' AS tier, 'Yes' AS is_active, 'mary.ronquillo@shopify.com' AS email),
+    STRUCT('Mary Joyce Cubacub' AS reviewer_name, 'RUE' AS squad, 'Tier 2 - Audit' AS tier, 'Yes' AS is_active, 'maryjoyce.cubacub@shopify.com' AS email),
+    STRUCT('Rosell Feliciano' AS reviewer_name, 'RUE' AS squad, 'Tier 2 - Audit' AS tier, 'Yes' AS is_active, 'rosell.feliciano@shopify.com' AS email),
+    STRUCT('Yhana Valdez' AS reviewer_name, 'RUE' AS squad, 'Tier 2 - Audit' AS tier, 'Yes' AS is_active, 'yhana.valdez@shopify.com' AS email)
+  ])
+)
+
+, categorized_audits AS (
+  SELECT
+    audits.*,
+    rm.squad,
+    rm.tier,
+    rm.is_active,
+    rm.email
+  FROM 
+    `sdp-prd-build-ecosystem.intermediate.app_audits` AS audits
+  JOIN reviewer_metadata rm
+    ON audits.audited_by = rm.reviewer_name
+)
+
+SELECT *
+FROM categorized_audits
+WHERE
+  audited_by NOT IN (
+    'Adam Wishart', 'Adrian Anderson', 'Alvin Li', 'Blake Galley', 
+    'Devonne Harbin', 'Keelan Filtness', 'Khalaf Mohamed', 
+    'Kivon Mayers', 'Meg Swim', 'Shinya Kataoka'
+  )
+ORDER BY created_at DESC

@@ -27,8 +27,8 @@ STRUCT('Joseph Jimenez', 'MAN', 'Tier 2', 'No', 'joseph.jimenez@shopify.com'),
 STRUCT('Rheyaleen Soriano', 'MAN', 'Tier 1', 'No', 'rheyaleen.soriano@shopify.com'),
 STRUCT('Sheila Agaban', 'MAN', 'Tier 2', 'No', 'sheila.agaban@shopify.com'),
 STRUCT('Veronica Musni', 'MAN', 'Tier 2', 'No', 'veronica.musni@shopify.com'),
-STRUCT('Kevin Jay Garcia', 'MAN', 'Tier 1', 'No', 'kevin.garcia@shopify.com'),
-STRUCT('Princess Severino', 'MAN', 'Tier 1', 'No', 'princes.severino@shopify.com'),
+STRUCT('Kevin Garcia', 'MAN', 'Tier 1', 'No', 'kevin.garcia@shopify.com'),
+STRUCT('Princes Severino', 'MAN', 'Tier 1', 'No', 'princes.severino@shopify.com'),
 
 -- NOS Squad (from latest T1/T2 list)
 STRUCT('Angel Fernandez', 'NOS', 'Tier 2', 'No', 'angel.fernandez@shopify.com'),
@@ -80,4 +80,4 @@ STRUCT('Blake Galley', 'ESCY', 'Internal', 'No', 'blake.galley@shopify.com'),
 STRUCT('Kivon Mayers', 'ESCY', 'Internal', 'No', 'kivon.mayers@shopify.com'),
 STRUCT('Dominic Stelmach', 'ESCY', 'Internal', 'No', 'dom.stelmach@shopify.com')
   ])
-)
+),

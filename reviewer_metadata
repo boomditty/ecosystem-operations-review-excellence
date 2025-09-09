@@ -51,11 +51,13 @@ STRUCT('Romel Obellano', 'NOS', 'Tier 2', 'No', 'romel.obellano@shopify.com'),
 STRUCT('Samantha Sales', 'NOS', 'Tier 2', 'No', 'samantha.sales@shopify.com'),
 STRUCT('Dave Vital', 'NOS', 'Tier 1', 'No', 'dave.vital@shopify.com'),
 
--- KRM Squad (all are Tier 2 - Audit)  
+-- KRM Squad (updated with new assignments and Tier 2 - Audit)
 STRUCT('Bea Flores', 'KRM', 'Tier 2 - Audit', 'Yes', 'bea.flores@shopify.com'),
 STRUCT('Christine Jhane Tolentino', 'KRM', 'Tier 2 - Audit', 'Yes', 'christine.tolentino@shopify.com'),
 STRUCT('Ian Sanchez', 'KRM', 'Tier 2 - Audit', 'Yes', 'ian.sanchez@shopify.com'),
 STRUCT('Jenny-Lyn Lardizabal', 'KRM', 'Tier 2 - Audit', 'Yes', 'jenny-lyn.lardizabal@shopify.com'),
+STRUCT('Jeremiah Mercado', 'KRM', 'Tier 2 - Audit', 'Yes', 'jeremiah.mercado@shopify.com'),
+STRUCT('Johanna Guzman', 'KRM', 'Tier 2 - Audit', 'Yes', 'johanna.deguzman@shopify.com'),
 STRUCT('Jolina Romero', 'KRM', 'Tier 2 - Audit', 'Yes', 'jolina.romero@shopify.com'),
 STRUCT('Justine Ignacio', 'KRM', 'Tier 2 - Audit', 'Yes', 'justine.ignacio@shopify.com'),
 STRUCT('Kimberly Alzona', 'KRM', 'Tier 2 - Audit', 'Yes', 'kimberly.alzona@shopify.com'),
@@ -63,18 +65,28 @@ STRUCT('Marigold Ocampo', 'KRM', 'Tier 2 - Audit', 'Yes', 'marigold.ocampo@shopi
 STRUCT('Mark Gopez', 'KRM', 'Tier 2 - Audit', 'Yes', 'mark.gopez@shopify.com'),
 STRUCT('Shaira Salgado', 'KRM', 'Tier 2 - Audit', 'Yes', 'shaira.salgado@shopify.com'),
 
--- RUE Squad (all are Tier 2 - Audit)
+-- RUE Squad (updated with new assignments and Tier 2 - Audit)
 STRUCT('Alvin Alipio', 'RUE', 'Tier 2 - Audit', 'Yes', 'alvin.alipio@shopify.com'),
 STRUCT('Cyrille Lacson Due', 'RUE', 'Tier 2 - Audit', 'Yes', 'cyrille.due@shopify.com'),
+STRUCT('Haidee Soto', 'RUE', 'Tier 2 - Audit', 'Yes', 'haidee.soto@shopify.com'),
 STRUCT('Jid Dayrit', 'RUE', 'Tier 2 - Audit', 'Yes', 'jid.dayrit@shopify.com'),
 STRUCT('Juan Manio', 'RUE', 'Tier 2 - Audit', 'Yes', 'juan.manio@shopify.com'),
+STRUCT('Kevin Alejo', 'RUE', 'Tier 2 - Audit', 'Yes', 'kevin.alejo@shopify.com'),
 STRUCT('Lev Maghinang', 'RUE', 'Tier 2 - Audit', 'Yes', 'lev.maghinang@shopify.com'),
 STRUCT('Louella Benedicto', 'RUE', 'Tier 2 - Audit', 'Yes', 'louella.benedicto@shopify.com'),
 STRUCT('Marina Bacatan', 'RUE', 'Tier 2 - Audit', 'Yes', 'marina.bacatan@shopify.com'),
 STRUCT('Mary Grace Ronquillo', 'RUE', 'Tier 2 - Audit', 'Yes', 'mary.ronquillo@shopify.com'),
 STRUCT('Mary Joyce Cubacub', 'RUE', 'Tier 2 - Audit', 'Yes', 'maryjoyce.cubacub@shopify.com'),
 STRUCT('Rosell Feliciano', 'RUE', 'Tier 2 - Audit', 'Yes', 'rosell.feliciano@shopify.com'),
-STRUCT('Yhana Valdez', 'RUE', 'Tier 2 - Audit', 'Yes', 'yhana.valdez@shopify.com'),
+
+-- AE Squad (new internal squad)
+STRUCT('Adam Wishart', 'AE', 'Internal', 'No', 'adam.wishart@shopify.com'),
+STRUCT('Adrian Anderson', 'AE', 'Internal', 'No', 'adrian.anderson@shopify.com'),
+STRUCT('Alvin Li', 'AE', 'Internal', 'No', 'alvin.li@shopify.com'),
+STRUCT('Devonne Harbin', 'AE', 'Internal', 'No', 'devonne.harbin@shopify.com'),
+STRUCT('Keelan Filtness', 'AE', 'Internal', 'No', 'keelan.filtness@shopify.com'),
+STRUCT('Khalaf Mohamed', 'AE', 'Internal', 'No', 'khalaf.mohamed@shopify.com'),
+STRUCT('Shinya Kataoka', 'AE', 'Internal', 'No', 'shinya.kataoka@shopify.com'),
 
 -- ESCY Squad (all are Internal)
 STRUCT('Pamela Gunawan', 'ESCY', 'Internal', 'No', 'pamela.gunawan@shopify.com'),

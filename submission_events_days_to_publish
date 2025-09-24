@@ -1,0 +1,56 @@
+WITH review_events AS (
+SELECT
+app_store_app_submission_id,
+event_timestamp,
+event_result
+FROM shopify-dw.apps_and_developers.app_store_app_submission_events_v1
+WHERE event_subcategory = 'review_transition'
+AND event_result IS NOT NULL
+),
+first_submit AS (
+SELECT
+app_store_app_submission_id,
+MIN(event_timestamp) AS first_submission_ts
+FROM review_events
+WHERE event_result = 'SUBMITTED'
+GROUP BY app_store_app_submission_id
+),
+first_approved_after_submit AS (
+SELECT
+r.app_store_app_submission_id,
+MIN(r.event_timestamp) AS approved_ts
+FROM review_events r
+JOIN first_submit s
+ON r.app_store_app_submission_id = s.app_store_app_submission_id
+AND r.event_timestamp >= s.first_submission_ts
+WHERE r.event_result = 'APPROVED'
+GROUP BY r.app_store_app_submission_id
+),
+metrics AS (
+SELECT
+s.app_store_app_submission_id,
+TIMESTAMP_DIFF(a.approved_ts, s.first_submission_ts, DAY) AS days_to_approved
+FROM first_submit s
+LEFT JOIN first_approved_after_submit a
+ON a.app_store_app_submission_id = s.app_store_app_submission_id
+)
+SELECT
+t.event_timestamp,
+t.api_client_id,
+t.api_key,
+t.event_type,
+t.event_subcategory,
+t.app_store_app_submission_id,
+t.app_store_app_submission_review_id,
+t.app_store_app_submission_review_type,
+t.app_store_app_submission_review_assessment_id,
+t.event_result,
+t.event_reason,
+t.reviewer_name,
+m.days_to_approved
+FROM shopify-dw.apps_and_developers.app_store_app_submission_events_v1 t
+LEFT JOIN metrics m
+ON t.app_store_app_submission_id = m.app_store_app_submission_id
+WHERE t.event_subcategory IN ('review_transition', 'app_published')
+AND t.event_result IS NOT NULL
+ORDER BY t.event_timestamp DESC;

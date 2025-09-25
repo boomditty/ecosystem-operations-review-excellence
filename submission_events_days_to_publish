@@ -54,3 +54,127 @@ ON t.app_store_app_submission_id = m.app_store_app_submission_id
 WHERE t.event_subcategory IN ('review_transition', 'app_published')
 AND t.event_result IS NOT NULL
 ORDER BY t.event_timestamp DESC;
+
+---updated
+
+WITH
+params AS (SELECT 14 AS window_days),
+
+date_range AS (
+SELECT day
+FROM params
+CROSS JOIN UNNEST(GENERATE_DATE_ARRAY(
+DATE_SUB(CURRENT_DATE(), INTERVAL window_days - 1 DAY),
+CURRENT_DATE()
+)) AS day
+),
+
+current_backlog AS (
+SELECT COUNT(*) AS backlog_count
+FROM shopify-dw.apps_and_developers.app_store_app_submission_reviews_v1
+WHERE latest_review_state = 'SUBMITTED'
+),
+
+events_filtered AS (
+SELECT
+app_store_app_submission_review_id,
+event_timestamp,
+event_type,
+event_subcategory,
+event_result
+FROM shopify-dw.apps_and_developers.app_store_app_submission_events_v1
+WHERE app_store_app_submission_review_id IS NOT NULL
+),
+
+-- First time the review enters SUBMITTED
+first_submitted AS (
+SELECT
+app_store_app_submission_review_id,
+MIN(event_timestamp) AS first_submitted_at
+FROM events_filtered
+WHERE event_result = 'SUBMITTED'
+GROUP BY app_store_app_submission_review_id
+),
+
+-- First autosave_assessment after first SUBMITTED = becomes assigned
+first_assignment_after_submit AS (
+SELECT
+e.app_store_app_submission_review_id,
+MIN(e.event_timestamp) AS assignment_at
+FROM events_filtered e
+JOIN first_submitted fs USING (app_store_app_submission_review_id)
+WHERE e.event_type = 'submission_review_assessment'
+AND e.event_subcategory = 'autosave_assessment'
+AND e.event_timestamp > fs.first_submitted_at
+GROUP BY e.app_store_app_submission_review_id
+),
+
+daily_submissions AS (
+SELECT
+dr.day,
+COALESCE(s.submitted_count, 0) AS submitted_count
+FROM date_range dr
+LEFT JOIN (
+SELECT
+DATE(first_submitted_at) AS day,
+COUNT(DISTINCT app_store_app_submission_review_id) AS submitted_count
+FROM first_submitted
+WHERE DATE(first_submitted_at) BETWEEN (
+SELECT DATE_SUB(CURRENT_DATE(), INTERVAL window_days - 1 DAY) FROM params
+) AND CURRENT_DATE()
+GROUP BY day
+) s USING (day)
+),
+
+daily_assignments AS (
+SELECT
+dr.day,
+COALESCE(a.assignment_count, 0) AS assignment_count
+FROM date_range dr
+LEFT JOIN (
+SELECT
+DATE(assignment_at) AS day,
+COUNT(DISTINCT app_store_app_submission_review_id) AS assignment_count
+FROM first_assignment_after_submit
+WHERE DATE(assignment_at) BETWEEN (
+SELECT DATE_SUB(CURRENT_DATE(), INTERVAL window_days - 1 DAY) FROM params
+) AND CURRENT_DATE()
+GROUP BY day
+) a USING (day)
+),
+
+averages AS (
+SELECT
+(SELECT backlog_count FROM current_backlog) AS backlog_count,
+AVG(da.assignment_count) AS avg_daily_assignments,
+AVG(ds.submitted_count) AS avg_daily_submissions
+FROM daily_assignments da
+JOIN daily_submissions ds USING (day)
+),
+
+forecast AS (
+SELECT
+backlog_count,
+avg_daily_assignments,
+avg_daily_submissions,
+avg_daily_assignments - avg_daily_submissions AS raw_net_clear_rate,
+GREATEST(avg_daily_assignments - avg_daily_submissions, 0) AS net_clear_rate,
+CASE
+WHEN avg_daily_assignments - avg_daily_submissions <= 0 THEN NULL
+ELSE CAST(CEIL(SAFE_DIVIDE(backlog_count, (avg_daily_assignments - avg_daily_submissions))) AS INT64)
+END AS days_to_clear
+FROM averages
+)
+
+SELECT
+backlog_count,
+avg_daily_assignments,
+avg_daily_submissions,
+raw_net_clear_rate,
+net_clear_rate,
+days_to_clear,
+CASE
+WHEN days_to_clear IS NULL THEN NULL
+ELSE DATE_ADD(CURRENT_DATE(), INTERVAL days_to_clear DAY)
+END AS projected_clear_date
+FROM forecast;

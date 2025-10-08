@@ -1,6 +1,11 @@
 -- Complete App Review Forecast Query - Using Assessments Table
 -- Combines historical data with 2025-2026 forecasts (24 months total)
 -- Updated to use app_store_app_submission_review_assessments_v1
+-- Includes actual app screening data from app_store_app_submission_reviews_v1
+--   - Uses UNNEST(reviewers) to extract individual reviewer activity from reviewers array
+--   - Filters by latest_review_state (not 'SUBMITTED' or 'WITHDRAWN')
+--   - Groups by reviewer.review_date and reviewer.reviewer_name
+-- TaskUs Target: 760 weekly attended hours (19 FTE), 45 app screenings per FTE monthly
 
 -- Reviewer metadata as a standalone CTE
 WITH reviewer_metadata AS (
@@ -114,6 +119,38 @@ STRUCT('Dominic Stelmach', 'ESCY', 'Internal', 'No', 'dom.stelmach@shopify.com')
   ])
 ),
 
+-- App screenings data (excluding SUBMITTED and WITHDRAWN states)
+-- Counts distinct app reviews worked on by each reviewer per month
+-- Uses UNNEST on reviewers array to get individual reviewer activity
+app_screenings AS (
+  SELECT
+    DATE(DATE_TRUNC(reviewer.review_date, MONTH)) AS screening_month,
+    reviewer.reviewer_name AS reviewed_by,
+    COUNT(DISTINCT r.app_store_app_submission_review_id) AS screening_count
+  FROM 
+    `shopify-dw.apps_and_developers.app_store_app_submission_reviews_v1` r,
+    UNNEST(r.reviewers) AS reviewer
+  WHERE
+    reviewer.review_date >= '2023-01-01'
+    AND reviewer.review_date < '2027-01-01'
+    AND r.latest_review_state NOT IN ('SUBMITTED', 'WITHDRAWN')  -- Exclude these states
+  GROUP BY
+    screening_month,
+    reviewed_by
+),
+
+-- Aggregate screenings by month and reviewer type
+monthly_screenings AS (
+  SELECT
+    aps.screening_month,
+    SUM(CASE WHEN rm.review_tier != 'Internal' THEN aps.screening_count ELSE 0 END) AS taskus_screenings,
+    SUM(CASE WHEN rm.review_tier = 'Internal' THEN aps.screening_count ELSE 0 END) AS internal_screenings,
+    SUM(aps.screening_count) AS total_screenings
+  FROM app_screenings aps
+  LEFT JOIN reviewer_metadata rm ON aps.reviewed_by = rm.reviewed_by
+  GROUP BY screening_month
+),
+
 -- Raw assessment data aggregated to submission level
 submission_summary AS (
   SELECT 
@@ -183,7 +220,12 @@ actual_data AS (
     
     -- Quality metrics
     AVG(SAFE_DIVIDE(ss.passed_assessment_count, NULLIF(ss.valid_assessment_count, 0))) AS avg_pass_rate,
-    SUM(ss.valid_assessment_count) AS total_assessments_performed
+    SUM(ss.valid_assessment_count) AS total_assessments_performed,
+    
+    -- App screening metrics from monthly_screenings
+    MAX(ms.taskus_screenings) AS taskus_actual_screenings,
+    MAX(ms.internal_screenings) AS internal_actual_screenings,
+    MAX(ms.total_screenings) AS total_actual_screenings
     
   FROM (
     SELECT 
@@ -193,6 +235,8 @@ actual_data AS (
   ) ss
   LEFT JOIN 
     reviewer_metadata rm ON ss.primary_reviewer_name = rm.reviewed_by
+  LEFT JOIN
+    monthly_screenings ms ON DATE(DATE_TRUNC(ss.submitted_at, MONTH)) = ms.screening_month
   GROUP BY 
     submission_month
 ),
@@ -251,7 +295,12 @@ forecast_data AS (
     
     CAST(NULL AS FLOAT64) AS avg_time_to_publish_days,
     CAST(NULL AS FLOAT64) AS avg_pass_rate,
-    CAST(NULL AS INT64) AS total_assessments_performed
+    CAST(NULL AS INT64) AS total_assessments_performed,
+    
+    -- App screening forecasts (based on target of 45 per TaskUs FTE)
+    CAST(NULL AS INT64) AS taskus_actual_screenings,
+    CAST(NULL AS INT64) AS internal_actual_screenings,
+    CAST(NULL AS INT64) AS total_actual_screenings
 
   FROM months_needing_forecasts mnf
   JOIN (
@@ -306,6 +355,11 @@ combined_data AS (
     avg_pass_rate,
     total_assessments_performed,
     
+    -- App screening actuals
+    taskus_actual_screenings,
+    internal_actual_screenings,
+    total_actual_screenings,
+    
     -- Productivity calculations
     ROUND(SAFE_DIVIDE(CAST(app_submission_total AS FLOAT64), CAST(NULLIF(headcount_taskus, 0) AS FLOAT64)), 1) AS submissions_per_head_taskus,
     ROUND(SAFE_DIVIDE(CAST(app_submission_total AS FLOAT64), CAST(NULLIF(headcount_total, 0) AS FLOAT64)), 1) AS submissions_per_head_total,
@@ -314,6 +368,10 @@ combined_data AS (
     -- Assessment-based capacity metrics
     ROUND(SAFE_DIVIDE(CAST(total_assessments_performed AS FLOAT64), CAST(NULLIF(headcount_taskus, 0) AS FLOAT64)), 1) AS assessments_per_head_taskus,
     ROUND(SAFE_DIVIDE(CAST(total_assessments_performed AS FLOAT64), CAST(NULLIF(headcount_total, 0) AS FLOAT64)), 1) AS assessments_per_head_total,
+    
+    -- App screening productivity (actual screenings per FTE)
+    ROUND(SAFE_DIVIDE(CAST(taskus_actual_screenings AS FLOAT64), CAST(NULLIF(headcount_taskus, 0) AS FLOAT64)), 1) AS taskus_screenings_per_fte,
+    ROUND(SAFE_DIVIDE(CAST(internal_actual_screenings AS FLOAT64), CAST(NULLIF(headcount_internal, 0) AS FLOAT64)), 1) AS internal_screenings_per_fte,
     
     -- Traditional capacity metrics
     headcount_taskus * 45 AS taskus_monthly_screening_capacity,
@@ -341,6 +399,11 @@ combined_data AS (
     avg_pass_rate,
     total_assessments_performed,
     
+    -- App screening actuals (NULL for forecasts)
+    taskus_actual_screenings,
+    internal_actual_screenings,
+    total_actual_screenings,
+    
     -- Productivity calculations
     ROUND(SAFE_DIVIDE(CAST(app_submission_total AS FLOAT64), CAST(NULLIF(headcount_taskus, 0) AS FLOAT64)), 1) AS submissions_per_head_taskus,
     ROUND(SAFE_DIVIDE(CAST(app_submission_total AS FLOAT64), CAST(NULLIF(headcount_total, 0) AS FLOAT64)), 1) AS submissions_per_head_total,
@@ -349,6 +412,10 @@ combined_data AS (
     -- Assessment-based capacity metrics (forecast placeholders)
     CAST(NULL AS FLOAT64) AS assessments_per_head_taskus,
     CAST(NULL AS FLOAT64) AS assessments_per_head_total,
+    
+    -- App screening productivity (NULL for forecasts)
+    CAST(NULL AS FLOAT64) AS taskus_screenings_per_fte,
+    CAST(NULL AS FLOAT64) AS internal_screenings_per_fte,
     
     -- Traditional capacity metrics
     headcount_taskus * 45 AS taskus_monthly_screening_capacity,
@@ -392,24 +459,35 @@ SELECT
   assessments_per_head_taskus,
   assessments_per_head_total,
   
+  -- App screening actuals and productivity
+  taskus_actual_screenings,
+  internal_actual_screenings,
+  total_actual_screenings,
+  taskus_screenings_per_fte,
+  internal_screenings_per_fte,
+  
   -- Capacity and screening metrics
   taskus_monthly_screening_capacity,
   internal_monthly_screening_capacity,
   forecasted_screenings_per_submission,
   
   -- SLA targets (constant values from your dashboard)
-  760 AS taskus_hours_per_week_target,
+  760 AS taskus_hours_per_week_target,  -- Weekly attended hours for 19 FTE
   240 AS internal_hours_per_week_target,
-  855 AS taskus_screenings_per_month_target,
+  855 AS taskus_screenings_per_month_target,  -- 19 FTE * 45 screenings per FTE
   108 AS internal_screenings_per_month_target,
   90 AS quality_per_month_target,
-  45 AS taskus_individual_monthly_screenings_target,
+  45 AS taskus_individual_monthly_screenings_target,  -- Monthly output per TaskUs FTE
   90 AS taskus_individual_quality_score_target,
   18 AS internal_individual_monthly_screenings_target,
   
   -- Performance vs targets
   ROUND(SAFE_DIVIDE(CAST(taskus_monthly_screening_capacity AS FLOAT64), 855.0) * 100, 1) AS taskus_capacity_vs_target_pct,
   ROUND(SAFE_DIVIDE(CAST(internal_monthly_screening_capacity AS FLOAT64), 108.0) * 100, 1) AS internal_capacity_vs_target_pct,
+  
+  -- App screening performance vs target (actual screenings per FTE vs 45 target)
+  ROUND(SAFE_DIVIDE(taskus_screenings_per_fte, 45.0) * 100, 1) AS taskus_screening_output_vs_target_pct,
+  ROUND(SAFE_DIVIDE(internal_screenings_per_fte, 18.0) * 100, 1) AS internal_screening_output_vs_target_pct,
   
   -- Workload analysis
   CASE 

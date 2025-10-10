@@ -12,51 +12,33 @@ WITH reviewer_metadata AS (
   SELECT * FROM UNNEST([
 -- JFG Squad
 STRUCT('Blue Bautista' AS reviewed_by, 'JFG' AS squad_code, 'Tier 2' AS review_tier, 'No' AS tier_2_audit, 'blue.bautista@shopify.com' AS email_address),
-STRUCT('Camille Reyes','JFG','Tier 1','No','camille.delosreyes@shopify.com'),
 STRUCT('Charl Tagalog','JFG','Tier 2','No','charl.tagalog@shopify.com'),
 STRUCT('Dave Jor','JFG','Tier 2','No','dave.jor@shopify.com'),
 STRUCT('Dominic Mostar','JFG','Tier 2','No','dominic.mostar@shopify.com'),
-STRUCT('Earl Quiambao','JFG','Tier 1','No','earl.quiambao@shopify.com'),
 STRUCT('Ericson Mendez','JFG','Tier 2','No','ericson.mendez@shopify.com'),
-STRUCT('Ernel Ramos','JFG','Tier 2','No','ernel.ramos@shopify.com'),
-STRUCT('Jeffrey Rozul','JFG','Tier 2','No','jeffrey.rozul@shopify.com'),
+STRUCT('Jeff Rozul','JFG','Tier 2','No','jeffrey.rozul@shopify.com'),
 STRUCT('Joan Dizon','JFG','Tier 2','No','joan.dizon@shopify.com'),
 STRUCT('Justine Lopez','JFG','Tier 2','No','justine.lopez02@shopify.com'),
 STRUCT('Justine Nieva','JFG','Tier 2','No','justine.nieva@shopify.com'),
-STRUCT('Kimberly Claire De Lena','JFG','Tier 2 - Audit','Yes','kimberly.delena@shopify.com'),
 STRUCT('Liezl Punzalan','JFG','Tier 2','No','liezl.punzalan@shopify.com'),
-STRUCT('Philip Pena','JFG','Tier 1','No','Philip.Pena@shopify.com'),
 STRUCT('Ramil Dimacuha','JFG','Tier 2','No','ramil.dimacuha@shopify.com'),
 STRUCT('Rommel Licup Jr','JFG','Tier 2','No','rommel.licup@shopify.com'),
-STRUCT('Trace Pangan','JFG','Tier 2','No','trace.pangan@shopify.com'),
-STRUCT('Von Mallari','JFG','Tier 2 - Audit','Yes','jonvonmallari.mallari@shopify.com'),
 -- MAN Squad
-STRUCT('Alden John Gonzales','MAN','Tier 2','No','alden.gonzales@shopify.com'),
-STRUCT('Angela De Jesus','MAN','Tier 1','No','angela.dejesus@shopify.com'),
-STRUCT('Bea Endozo','MAN','Tier 1','No','bea.endozo@shopify.com'),
-STRUCT('Camille Cordova Carlos','MAN','Tier 2','No','camille.carlos@shopify.com'),
 STRUCT('Camille Quizon','MAN','Tier 2','No','camille.quizon@shopify.com'),
 STRUCT('Dave Vital','MAN','Tier 2','No','dave.vital@shopify.com'),
 STRUCT('Dionard Badion','MAN','Tier 2','No','dionard.badion@shopify.com'),
 STRUCT('Ednel Mercado','MAN','Tier 2','No','ednel.mercado@shopify.com'),
+STRUCT('Enjelbert Lamboloto','MAN','Tier 2','No','enjelbert.lamboloto@shopify.com'),
 STRUCT('Jasper Agbanglo','MAN','Tier 2','No','jasper.agbanglo@shopify.com'),
 STRUCT('Jefferson Anonas','MAN','Tier 2','No','jefferson.anonas@shopify.com'),
 STRUCT('Jessierey Pascual','MAN','Tier 2','No','jessierey.pascual@shopify.com'),
 STRUCT('Jhazel Camus','MAN','Tier 2','No','jhazel.camus@shopify.com'),
 STRUCT('Joseph Jimenez','MAN','Tier 2','No','joseph.jimenez@shopify.com'),
-STRUCT('Kevin Garcia','MAN','Tier 2','No','kevin.garcia@shopify.com'),
-STRUCT('Marinelle Higante','MAN','Tier 2 - Audit','Yes','marinelle.higante@shopify.com'),
 STRUCT('Mark Sibal','MAN','Tier 2','No','mark.sibal@shopify.com'),
 STRUCT('Mary Esguerra','MAN','Tier 2','No','mary.esguerra@shopify.com'),
-STRUCT('Nexus Baluran','MAN','Tier 1','No','nexus.baluran@shopify.com'),
-STRUCT('Princes Severino','MAN','Tier 2','No','princes.severino@shopify.com'),
-STRUCT('Rheyaleen Soriano','MAN','Tier 1','No','rheyaleen.soriano@shopify.com'),
-STRUCT('Sheila Agaban','MAN','Tier 2','No','sheila.agaban@shopify.com'),
 -- NOS Squad
 STRUCT('Adriane Guzman','NOS','Tier 2','No','adriane.deguzman@shopify.com'),
 STRUCT('Angel Fernandez','NOS','Tier 2','No','angel.fernandez@shopify.com'),
-STRUCT('Bernard Alfonso','NOS','Tier 2','No','bernard.alfonso@shopify.com'),
-STRUCT('Caryl Rivera','NOS','Tier 2','No','caryl.rivera@shopify.com'),
 STRUCT('Ingmar Honawar','NOS','Tier 2','No','ingmar.honawar@shopify.com'),
 STRUCT('Lawrence Lo','NOS','Tier 2','No','Lawrence.Lo@shopify.com'),
 STRUCT('Nazareno Llenares','NOS','Tier 2','No','Nazareno.llenares@shopify.com'),
@@ -65,41 +47,29 @@ STRUCT('Romel Obellano','NOS','Tier 2','No','romel.obellano@shopify.com'),
 STRUCT('Ronnel Capunpue','NOS','Tier 2','No','ronnel.capunpue@shopify.com'),
 STRUCT('Roselyn Santos','NOS','Tier 2','No','roselyn.santos@shopify.com'),
 STRUCT('Samantha Sales','NOS','Tier 2','No','samantha.sales@shopify.com'),
-STRUCT('Sean Terrence Abad','NOS','Tier 2','No','sean.abad@shopify.com'),
+STRUCT('Sean Abad','NOS','Tier 2','No','sean.abad@shopify.com'),
 STRUCT('Veronica Musni','NOS','Tier 2','No','veronica.musni@shopify.com'),
 -- KRM Squad
-STRUCT('Alvin Alipio','KRM','Tier 2 - Audit','Yes','alvin.alipio@shopify.com'),
-STRUCT('Andrew Exiomo','KRM','Tier 2 - Audit','Yes','andrewjames.exiomo@shopify.com'),
 STRUCT('Bea Flores','KRM','Tier 2 - Audit','Yes','bea.flores@shopify.com'),
-STRUCT('Christine Jhane Tolentino','KRM','Tier 2 - Audit','Yes','christine.tolentino@shopify.com'),
 STRUCT('Cyrille Lacson Due','KRM','Tier 2 - Audit','Yes','cyrille.due@shopify.com'),
-STRUCT('Dhang Losada','KRM','Tier 2 - Audit','Yes','dhang.losada@shopify.com'),
 STRUCT('Ian Sanchez','KRM','Tier 2 - Audit','Yes','ian.sanchez@shopify.com'),
 STRUCT('Jeremiah M','KRM','Tier 2 - Audit','Yes','jeremiah.mercado@shopify.com'),
-STRUCT('Jid Dayrit','KRM','Tier 2 - Audit','Yes','jid.dayrit@shopify.com'),
 STRUCT('Johanna Guzman','KRM','Tier 2 - Audit','Yes','johanna.deguzman@shopify.com'),
-STRUCT('Jolina Romero','KRM','Tier 2 - Audit','Yes','jolina.romero@shopify.com'),
-STRUCT('Justine Ignacio','KRM','Tier 2 - Audit','Yes','justine.ignacio@shopify.com'),
 STRUCT('Kimberly Alzona','KRM','Tier 2 - Audit','Yes','kimberly.alzona@shopify.com'),
 STRUCT('Mary Grace Ronquillo','KRM','Tier 2 - Audit','Yes','mary.ronquillo@shopify.com'),
-STRUCT('Mimelanie Cunanan','KRM','Tier 2 - Audit','Yes','mimelanie.cunanan@shopify.com'),
 STRUCT('Shaira Salgado','KRM','Tier 2 - Audit','Yes','shaira.salgado@shopify.com'),
 -- RUE Squad
-STRUCT('Diana Limiac','RUE','Tier 2','No','diana.limiac@shopify.com'),
 STRUCT('Haidee Soto','RUE','Tier 2 - Audit','Yes','haidee.soto@shopify.com'),
-STRUCT('Jainah David','RUE','Tier 2','No','jainah.david@shopify.com'),
 STRUCT('Jenny-Lyn Lardizabal','RUE','Tier 2 - Audit','Yes','jenny-lyn.lardizabal@shopify.com'),
 STRUCT('Juan Manio','RUE','Tier 2 - Audit','Yes','juan.manio@shopify.com'),
 STRUCT('Kevin Alejo','RUE','Tier 2 - Audit','Yes','kevin.alejo@shopify.com'),
 STRUCT('Lev Maghinang','RUE','Tier 2 - Audit','Yes','lev.maghinang@shopify.com'),
 STRUCT('Louella Benedicto','RUE','Tier 2 - Audit','Yes','louella.benedicto@shopify.com'),
-STRUCT('Maricar Manog','RUE','Tier 2 - Audit','Yes','maricar.manog@shopify.com'),
 STRUCT('Marigold Ocampo','RUE','Tier 2 - Audit','Yes','marigold.ocampo@shopify.com'),
 STRUCT('Marina Bacatan','RUE','Tier 2 - Audit','Yes','marina.bacatan@shopify.com'),
 STRUCT('Mark Gopez','RUE','Tier 2 - Audit','Yes','mark.gopez@shopify.com'),
 STRUCT('Mary Joyce Cubacub','RUE','Tier 2 - Audit','Yes','maryjoyce.cubacub@shopify.com'),
 STRUCT('Rosell Feliciano','RUE','Tier 2 - Audit','Yes','rosell.feliciano@shopify.com'),
-STRUCT('Yhana Valdez','RUE','Tier 2 - Audit','Yes','yhana.valdez@shopify.com'),
 -- AE Squad
 STRUCT('Adam Wishart', 'AE', 'Internal', 'No', 'adam.wishart@shopify.com'),
 STRUCT('Adrian Anderson', 'AE', 'Internal', 'No', 'adrian.anderson@shopify.com'),
@@ -423,6 +393,61 @@ combined_data AS (
     ROUND(app_submission_total * 1.7, 0) AS forecasted_screenings_per_submission
     
   FROM forecast_data
+),
+
+-- Add growth and variance calculations
+metrics_with_growth AS (
+  SELECT 
+    *,
+    
+    -- Year-over-Year Growth (same month, prior year)
+    LAG(app_submission_total, 12) OVER (ORDER BY submission_month) AS app_submission_total_prior_year,
+    LAG(headcount_taskus, 12) OVER (ORDER BY submission_month) AS headcount_taskus_prior_year,
+    LAG(headcount_internal, 12) OVER (ORDER BY submission_month) AS headcount_internal_prior_year,
+    LAG(taskus_actual_screenings, 12) OVER (ORDER BY submission_month) AS taskus_screenings_prior_year,
+    
+    -- Month-over-Month (sequential)
+    LAG(app_submission_total, 1) OVER (ORDER BY submission_month) AS app_submission_total_prior_month,
+    LAG(headcount_taskus, 1) OVER (ORDER BY submission_month) AS headcount_taskus_prior_month,
+    LAG(headcount_internal, 1) OVER (ORDER BY submission_month) AS headcount_internal_prior_month,
+    
+    -- Rolling 12-month totals for smoother growth trends
+    SUM(app_submission_total) OVER (
+      ORDER BY submission_month 
+      ROWS BETWEEN 11 PRECEDING AND CURRENT ROW
+    ) AS rolling_12m_submissions_current,
+    
+    SUM(app_submission_total) OVER (
+      ORDER BY submission_month 
+      ROWS BETWEEN 23 PRECEDING AND 12 PRECEDING
+    ) AS rolling_12m_submissions_prior,
+    
+    -- Rolling 12-month averages
+    AVG(app_submission_total) OVER (
+      ORDER BY submission_month 
+      ROWS BETWEEN 11 PRECEDING AND CURRENT ROW
+    ) AS rolling_12m_avg_monthly,
+    
+    AVG(taskus_actual_screenings) OVER (
+      ORDER BY submission_month 
+      ROWS BETWEEN 11 PRECEDING AND CURRENT ROW
+    ) AS rolling_12m_avg_taskus_screenings,
+    
+    AVG(headcount_taskus) OVER (
+      ORDER BY submission_month 
+      ROWS BETWEEN 11 PRECEDING AND CURRENT ROW
+    ) AS rolling_12m_avg_headcount_taskus,
+    
+    -- Rolling volatility for trend analysis
+    STDDEV(app_submission_total) OVER (
+      ORDER BY submission_month 
+      ROWS BETWEEN 11 PRECEDING AND CURRENT ROW
+    ) AS rolling_12m_volatility,
+    
+    -- For variance calculation between forecast scenarios (if we add multiple scenarios)
+    LAG(app_submission_total, 1) OVER (PARTITION BY month ORDER BY year) AS app_submission_same_month_prior_year
+    
+  FROM combined_data
 )
 
 -- Final output with SLA targets and performance metrics
@@ -500,7 +525,70 @@ SELECT
     WHEN submissions_per_head_internal > 35 THEN 'High'
     WHEN submissions_per_head_internal > 25 THEN 'Medium'
     ELSE 'Normal' 
-  END AS internal_workload_level
+  END AS internal_workload_level,
+  
+  -- Year-over-Year Growth Metrics
+  app_submission_total_prior_year,
+  ROUND(app_submission_total - app_submission_total_prior_year, 0) AS submissions_yoy_variance,
+  ROUND(SAFE_DIVIDE(app_submission_total - app_submission_total_prior_year, NULLIF(app_submission_total_prior_year, 0)) * 100, 1) AS submissions_yoy_growth_pct,
+  
+  headcount_taskus_prior_year,
+  ROUND(headcount_taskus - headcount_taskus_prior_year, 1) AS taskus_headcount_yoy_variance,
+  ROUND(SAFE_DIVIDE(headcount_taskus - headcount_taskus_prior_year, NULLIF(headcount_taskus_prior_year, 0)) * 100, 1) AS taskus_headcount_yoy_growth_pct,
+  
+  headcount_internal_prior_year,
+  ROUND(headcount_internal - headcount_internal_prior_year, 1) AS internal_headcount_yoy_variance,
+  ROUND(SAFE_DIVIDE(headcount_internal - headcount_internal_prior_year, NULLIF(headcount_internal_prior_year, 0)) * 100, 1) AS internal_headcount_yoy_growth_pct,
+  
+  taskus_screenings_prior_year,
+  ROUND(taskus_actual_screenings - taskus_screenings_prior_year, 0) AS taskus_screenings_yoy_variance,
+  ROUND(SAFE_DIVIDE(taskus_actual_screenings - taskus_screenings_prior_year, NULLIF(taskus_screenings_prior_year, 0)) * 100, 1) AS taskus_screenings_yoy_growth_pct,
+  
+  -- Month-over-Month Growth Metrics
+  app_submission_total_prior_month,
+  ROUND(app_submission_total - app_submission_total_prior_month, 0) AS submissions_mom_variance,
+  ROUND(SAFE_DIVIDE(app_submission_total - app_submission_total_prior_month, NULLIF(app_submission_total_prior_month, 0)) * 100, 1) AS submissions_mom_growth_pct,
+  
+  headcount_taskus_prior_month,
+  ROUND(headcount_taskus - headcount_taskus_prior_month, 1) AS taskus_headcount_mom_variance,
+  
+  headcount_internal_prior_month,
+  ROUND(headcount_internal - headcount_internal_prior_month, 1) AS internal_headcount_mom_variance,
+  
+  -- Rolling 12-Month Growth Metrics (Smoothed Trends)
+  rolling_12m_submissions_current,
+  rolling_12m_submissions_prior,
+  ROUND(rolling_12m_submissions_current - rolling_12m_submissions_prior, 0) AS rolling_12m_variance,
+  ROUND(SAFE_DIVIDE(
+    rolling_12m_submissions_current - rolling_12m_submissions_prior, 
+    NULLIF(rolling_12m_submissions_prior, 0)
+  ) * 100, 1) AS running_yearly_growth_pct,
+  
+  -- Rolling averages for trend smoothing
+  ROUND(rolling_12m_avg_monthly, 1) AS rolling_12m_avg_monthly,
+  ROUND(rolling_12m_avg_taskus_screenings, 1) AS rolling_12m_avg_taskus_screenings,
+  ROUND(rolling_12m_avg_headcount_taskus, 1) AS rolling_12m_avg_headcount_taskus,
+  
+  -- Volatility and trend indicators
+  ROUND(rolling_12m_volatility, 1) AS rolling_12m_volatility,
+  
+  -- Growth trend classification based on rolling 12-month data
+  CASE 
+    WHEN rolling_12m_submissions_current - rolling_12m_submissions_prior > 1000 THEN 'High Growth'
+    WHEN rolling_12m_submissions_current - rolling_12m_submissions_prior > 500 THEN 'Moderate Growth'
+    WHEN rolling_12m_submissions_current - rolling_12m_submissions_prior > 0 THEN 'Slow Growth'
+    WHEN rolling_12m_submissions_current - rolling_12m_submissions_prior > -500 THEN 'Slight Decline'
+    ELSE 'Significant Decline'
+  END AS rolling_growth_trend_category,
+  
+  -- Stability indicator (lower volatility = more stable)
+  CASE 
+    WHEN rolling_12m_volatility IS NULL THEN 'Insufficient Data'
+    WHEN rolling_12m_volatility < 100 THEN 'Very Stable'
+    WHEN rolling_12m_volatility < 200 THEN 'Stable'
+    WHEN rolling_12m_volatility < 400 THEN 'Moderate Volatility'
+    ELSE 'High Volatility'
+  END AS volatility_level
 
-FROM combined_data
+FROM metrics_with_growth
 ORDER BY submission_month;
